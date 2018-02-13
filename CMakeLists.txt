@@ -25,6 +25,8 @@ endif()
 INCLUDE_DIRECTORIES(extern/)
 
 INCLUDE_DIRECTORIES(src/)
+INCLUDE_DIRECTORIES(src/geometry)
+INCLUDE_DIRECTORIES(src/models)
 INCLUDE_DIRECTORIES(src/utils)
 
 ################################################################################
@@ -85,3 +87,7 @@ add_library(jnd ${FILES})
 ################################################################################
 ## EXECUTABLES                                                                ##
 ################################################################################
+
+## TESTS #######################################################################
+add_executable(test_models src/test/test_models.cpp)
+target_link_libraries(test_models jnd)

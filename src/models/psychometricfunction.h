@@ -14,6 +14,6 @@ class WeibulPsychometricFunction
   {
     out = 1. - exp(-pow(in, m_param(0)));
   }
-}
+};
 
 #endif //PSYCHOMETRICFUNCTION_H

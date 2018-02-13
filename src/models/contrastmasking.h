@@ -14,6 +14,6 @@ class DalyMasking
   {
     out = pow(1. + pow(m_param(0) * pow (m_param(1)*in, m_param(2)), m_param(3)), 1./m_param(3));
   }
-}
+};
 
 #endif //VISUALMASKING_H
