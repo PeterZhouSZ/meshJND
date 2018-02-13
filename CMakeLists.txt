@@ -27,6 +27,7 @@ INCLUDE_DIRECTORIES(extern/)
 INCLUDE_DIRECTORIES(src/)
 INCLUDE_DIRECTORIES(src/geometry)
 INCLUDE_DIRECTORIES(src/models)
+INCLUDE_DIRECTORIES(src/perception)
 INCLUDE_DIRECTORIES(src/utils)
 
 ################################################################################
@@ -60,6 +61,8 @@ SET(SURFACE_MESH_HEADER_FILES
 SET(MESHJND_SRC_FILES
     src/geometry/mesh.cpp
 
+    src/perception/flatcontrastcomputor.cpp
+
     src/utils/colormap.cpp
     )
 
@@ -69,6 +72,10 @@ SET(MESHJND_HEADER_FILES
     src/models/contrastsensitivity.h
     src/models/contrastmasking.h
     src/models/psychometricfunction.h
+
+    src/perception/basecontrastcomputor.h
+    src/perception/basefrequencycomputor.h
+    src/perception/flatcontrastcomputor.h
 
     src/utils/colormap.h
     src/utils/genericparametricmodel.h
