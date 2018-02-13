@@ -23,7 +23,7 @@ public:
   GenericParametricModel() {}
   GenericParametricModel(const ParameterType& param) : m_param(param) {}
 
-  virtual void ~GenericParametricModel() {}
+  virtual ~GenericParametricModel() {}
 
 //-----------------------------------------------------------------------------------
 
