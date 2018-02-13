@@ -2,6 +2,7 @@
 #define GENERICPARAMETRICMODEL_H
 
 #include <vector>
+#include <Eigen/Core>
 
 template < typename TParam        ,
            typename TIn = double  ,
@@ -68,5 +69,8 @@ public:
 protected:
   ParameterType m_param;
 };
+
+typedef GenericParametricModel<Eigen::VectorXd, double         , double> ModelXd;
+typedef GenericParametricModel<Eigen::VectorXd, Eigen::VectorXd, double> ModelXXd;
 
 #endif //GENERICPARAMETRICMODEL_H

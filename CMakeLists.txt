@@ -61,6 +61,11 @@ SET(MESHJND_SRC_FILES
 
 SET(MESHJND_HEADER_FILES
     src/geometry/mesh.h
+
+    src/models/contrastsensitivity.h
+    src/models/contrastmasking.h
+    src/models/psychometricfunction.h
+
     src/utils/genericparametricmodel.h
     )
 
