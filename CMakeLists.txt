@@ -59,6 +59,8 @@ SET(SURFACE_MESH_HEADER_FILES
 
 SET(MESHJND_SRC_FILES
     src/geometry/mesh.cpp
+
+    src/utils/colormap.cpp
     )
 
 SET(MESHJND_HEADER_FILES
@@ -68,6 +70,7 @@ SET(MESHJND_HEADER_FILES
     src/models/contrastmasking.h
     src/models/psychometricfunction.h
 
+    src/utils/colormap.h
     src/utils/genericparametricmodel.h
     )
 
