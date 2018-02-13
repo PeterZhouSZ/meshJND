@@ -14,6 +14,9 @@ public:
 
   virtual ~Mesh();
 
+public:
+  void store_as_vertex_color(const Eigen::VectorXd& data);
+
 };
 
 #endif //MESH_H
