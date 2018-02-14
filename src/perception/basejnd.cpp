@@ -52,5 +52,5 @@ compute_displacement_threshold(const std::vector<Vector3d> &dir, VectorXd &out)
   out.setZero();
 
   for(unsigned int i=0; i<m_mesh->vertices_size(); ++i)
-    out(i) = compute_displacement_threshold(i, dir(i));
+    out(i) = compute_displacement_threshold(i, dir[i]);
 }

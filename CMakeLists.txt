@@ -106,5 +106,8 @@ add_library(jnd ${FILES})
 ################################################################################
 
 ## TESTS #######################################################################
-add_executable(test_models src/test/test_models.cpp)
-target_link_libraries(test_models jnd)
+#add_executable(test_models src/test/test_models.cpp)
+#target_link_libraries(test_models jnd)
+
+add_executable(test_attributes src/test/test_attributes.cpp)
+target_link_libraries(test_attributes jnd)
