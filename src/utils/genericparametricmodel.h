@@ -20,10 +20,17 @@ public:
 //-----------------------------------------------------------------------------------
 
 public:
-  GenericParametricModel() {}
-  GenericParametricModel(const ParameterType& param) : m_param(param) {}
+  GenericParametricModel()
+  {
+//    default_params();
+  }
 
-  virtual ~GenericParametricModel() {}
+  GenericParametricModel(const ParameterType& param)
+    : m_param(param)
+  {}
+
+  virtual ~GenericParametricModel()
+  {}
 
 //-----------------------------------------------------------------------------------
 
@@ -67,10 +74,13 @@ public:
 //-----------------------------------------------------------------------------------
 
 protected:
+  ///sets default values to m_params
+  virtual void default_params() = 0;
+
+//-----------------------------------------------------------------------------------
+
+protected:
   ParameterType m_param;
 };
-
-typedef GenericParametricModel<Eigen::VectorXd, double         , double> ModelXd;
-typedef GenericParametricModel<Eigen::VectorXd, Eigen::VectorXd, double> ModelXXd;
 
 #endif //GENERICPARAMETRICMODEL_H

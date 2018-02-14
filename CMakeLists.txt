@@ -73,6 +73,8 @@ SET(MESHJND_HEADER_FILES
     src/models/contrastsensitivity.h
     src/models/contrastmasking.h
     src/models/psychometricfunction.h
+    src/models/threshold.h
+    src/models/visibility.h
 
     src/perception/basecontrastcomputor.h
     src/perception/basefrequencycomputor.h
