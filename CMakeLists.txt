@@ -62,6 +62,7 @@ SET(MESHJND_SRC_FILES
     src/geometry/mesh.cpp
 
     src/perception/flatcontrastcomputor.cpp
+    src/perception/flatfrequencycomputor.cpp
 
     src/utils/colormap.cpp
     )
@@ -76,9 +77,11 @@ SET(MESHJND_HEADER_FILES
     src/perception/basecontrastcomputor.h
     src/perception/basefrequencycomputor.h
     src/perception/flatcontrastcomputor.h
+    src/perception/flatfrequencycomputor.h
 
     src/utils/colormap.h
     src/utils/genericparametricmodel.h
+    src/utils/unitconverter.h
     )
 
 ## ALL FILES ###################################################################
