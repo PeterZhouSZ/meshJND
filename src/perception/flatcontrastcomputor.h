@@ -17,7 +17,7 @@ public:
 
   virtual ~FlatContrastComputor() {}
 
-  virtual double compute(const LightType &ldir, int id);
+  virtual double compute(const LightType& ldir, int id);
   virtual void   compute(const LightType& ldir, Eigen::VectorXd& out);
 };
 
