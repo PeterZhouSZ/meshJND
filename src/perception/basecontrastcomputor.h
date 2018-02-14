@@ -9,6 +9,7 @@ class Mesh;
 
 class BaseContrastComputor
 {
+public:
   BaseContrastComputor()
     : m_mesh(0)
   {}

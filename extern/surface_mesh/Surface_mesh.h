@@ -1694,7 +1694,10 @@ public: //------------------------------------------ geometry-related functions
     /// updates the indices face property
     void update_inidices();
 
+    /// vertex indices of a face (read only)
     const Indices& index(Face f) const { return findices_[f]; }
+
+    /// vertex indices of a face
     Indices& index(Face f) { return findices_[f]; }
 
     /// vector of inidices
@@ -1706,11 +1709,23 @@ public: //------------------------------------------ geometry-related functions
     /// compute normal vector of face \c f.
     Normal compute_face_normal(Face f) const;
 
+    /// normal of a face (read only)
+    const Normal& normal(Face f) const { return fnormal_[f]; }
+
+    /// normals of a face
+    Normal& normal(Face f) { return fnormal_[f]; }
+
     /// compute vertex normals by calling compute_vertex_normal(Vertex) for each vertex.
     void update_vertex_normals();
 
     /// compute normal vector of vertex \c v.
     Normal compute_vertex_normal(Vertex v) const;
+
+    /// normal of a vertex (read only)
+    const Normal& normal(Vertex v) const { return vnormal_[v]; }
+
+    /// normals of a vertex
+    Normal& normal(Vertex v) { return vnormal_[v]; }
 
     /// compute the length of edge \c e.
     Scalar edge_length(Edge e) const;
