@@ -4,7 +4,7 @@
 
 double
 BaseJND::
-compute_displacement_threshold(int id, const Vector3d &dir)
+compute_displacement_threshold(int id, const Vector3d& ldir, const Vector3d& dir)
 {
   //inveral boundaries
   double a = 0;
@@ -14,12 +14,13 @@ compute_displacement_threshold(int id, const Vector3d &dir)
   double T = b;
 
   //initialize visibility
-  double v = compute_visibility(id, T*dir);
+  double v = compute_visibility(id, ldir, T*dir);
   while( fabs(v-m_tolerence) > m_precision ){
+    //get interval middle
     T = a + 0.5*(b-a);
 
     //update visibility
-    v = compute_visibility(id, T*dir);
+    v = compute_visibility(id, ldir, T*dir);
 
     //update interval
     if(v > m_tolerence)
@@ -51,6 +52,8 @@ compute_displacement_threshold(const std::vector<Vector3d> &dir, VectorXd &out)
   out.resize(m_mesh->vertices_size());
   out.setZero();
 
+  Vector3d ldir;
+
   for(unsigned int i=0; i<m_mesh->vertices_size(); ++i)
-    out(i) = compute_displacement_threshold(i, dir[i]);
+    out(i) = compute_displacement_threshold(i, ldir, dir[i]);
 }

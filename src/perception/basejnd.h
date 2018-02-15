@@ -46,7 +46,7 @@ public:
   ///computes the displacement threshold of a vertex in a given direction dir
   /// implements alogorithm 1 of:
   /// "Just noticeable distortion profile for flat-shaded 3D mesh surfaces." IEEE transactions on visualization and computer graphics 22.11 (2016).
-  double compute_displacement_threshold(int id, const Vector3d& dir);
+  double compute_displacement_threshold(int id, const Vector3d& ldir, const Vector3d& dir);
 
   ///computes the displacement threshold of all the vertices in the direction dir
   void compute_displacement_threshold(const std::vector< Vector3d >& dir,
@@ -54,7 +54,7 @@ public:
 
 protected:
   ///computes the visibility of the a vertex when displaced by a certain vertor
-  virtual double compute_visibility(int id, const Vector3d& displacement) = 0;
+  virtual double compute_visibility(int id, const Vector3d& ldir, const Vector3d& displacement) = 0;
 
 protected:
   Mesh* m_mesh;

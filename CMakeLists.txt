@@ -8,6 +8,11 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.2.0)
 ## CONFIG                                                                     ##
 ################################################################################
 
+## PROJECT #####################################################################
+SET( COMPILE_TESTS true )
+
+## C++ #########################################################################
+
 if(WIN32)
   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
 else()
@@ -66,6 +71,7 @@ SET(MESHJND_SRC_FILES
     src/perception/basejnd.cpp
 
     src/utils/colormap.cpp
+    src/utils/lightsampler.cpp
     )
 
 SET(MESHJND_HEADER_FILES
@@ -85,6 +91,7 @@ SET(MESHJND_HEADER_FILES
 
     src/utils/colormap.h
     src/utils/genericparametricmodel.h
+    src/utils/lightsampler.h
     src/utils/unitconverter.h
     )
 
@@ -106,8 +113,13 @@ add_library(jnd ${FILES})
 ################################################################################
 
 ## TESTS #######################################################################
-#add_executable(test_models src/test/test_models.cpp)
-#target_link_libraries(test_models jnd)
+if(COMPILE_TESTS)
+    #add_executable(test_models src/test/test_models.cpp)
+    #target_link_libraries(test_models jnd)
 
-add_executable(test_attributes src/test/test_attributes.cpp)
-target_link_libraries(test_attributes jnd)
+    add_executable(test_attributes src/test/test_attributes.cpp)
+    target_link_libraries(test_attributes jnd)
+
+    add_executable(test_sampler src/test/test_sampler.cpp)
+    target_link_libraries(test_sampler jnd)
+endif()
