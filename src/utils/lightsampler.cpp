@@ -31,9 +31,9 @@ to_global(const MatrixX3d &local, MatrixX3d &global, const Vector3d &up) const
   Vector3d oUp(Vector3d::UnitZ());
 
   double c = oUp.dot(up);
-  if( c == 1 ) //nothing to do
+  if( c == 1. ) //nothing to do
     global = local;
-  else if ( c == -1 ) //opposite direction
+  else if ( c == -1. ) //opposite direction
     global = -local;
   else{
 

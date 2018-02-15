@@ -66,9 +66,8 @@ protected:
 
   bool m_need_init;
 
-  //initial perceptual attributes
-  VectorXd m_init_contrast;
-  VectorXd m_init_frequency;
+  //light samples
+  std::vector < MatrixX3d > m_light;
 };
 
 #endif //BASEJND_H

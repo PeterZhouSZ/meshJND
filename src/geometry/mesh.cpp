@@ -15,6 +15,18 @@ Mesh::
 
 void
 Mesh::
+compute_bounding_box()
+{
+  Vertex_iterator vb = vertices().begin();
+  Vertex_iterator ve = vertices().end();
+
+  m_bbox.setEmpty();
+  for(Vertex_iterator it=vb; it!=ve; ++it)
+    m_bbox.extend(position(*it));
+}
+
+void
+Mesh::
 store_as_vertex_color(const Eigen::VectorXd &data, double max, double min)
 {
   //make sure the data vector has a suitable size

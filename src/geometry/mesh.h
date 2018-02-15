@@ -15,7 +15,16 @@ public:
   virtual ~Mesh();
 
 public:
+  const Eigen::AlignedBox3d& bbox() const { return m_bbox; }
+  Eigen::AlignedBox3d& bbox() { return m_bbox; }
+
+public:
+  void compute_bounding_box();
+
   void store_as_vertex_color(const Eigen::VectorXd& data, double max=1., double min=0.);
+
+protected:
+  Eigen::AlignedBox3d m_bbox;
 
 };
 
