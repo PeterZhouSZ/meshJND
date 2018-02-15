@@ -5,7 +5,7 @@
 
 void
 LightSampler::
-sample(MatX3 &samples, int n, Method method, double phi_min, double phi_max) const
+sample(MatrixX3d &samples, int n, Method method, double phi_min, double phi_max) const
 {
   switch(method){
     case NAIVE:
@@ -17,23 +17,43 @@ sample(MatX3 &samples, int n, Method method, double phi_min, double phi_max) con
 
 void
 LightSampler::
-sample_to_global(MatX3 &samples, int n, Method method, const Vec3 &up, double phi_min, double phi_max) const
+sample_to_global(MatrixX3d &samples, int n, Method method, const Vector3d &up, double phi_min, double phi_max) const
 {
-  MatX3 local;
+  MatrixX3d local;
   sample(local, n, method, phi_min, phi_max);
   to_global(local, samples, up);
 }
 
 void
 LightSampler::
-to_global(const MatX3 &local, MatX3 &global, const Vec3 &up) const
+to_global(const MatrixX3d &local, MatrixX3d &global, const Vector3d &up) const
 {
-  global = local;
+  Vector3d oUp(Vector3d::UnitZ());
+
+  double c = oUp.dot(up);
+  if( c == 1 ) //nothing to do
+    global = local;
+  else if ( c == -1 ) //opposite direction
+    global = -local;
+  else{
+
+    Vector3d v = oUp.cross(up);
+    Matrix3d vx;
+    vx << 0, -v(2), v(1),
+          v(2), 0, -v(0),
+          -v(1), v(0), 0;
+    vx = -vx;
+
+    //compute rotation matrix
+    Matrix3d R = Matrix3d::Identity() + vx + vx*vx/(1+c);
+
+    global = local*R;
+  }
 }
 
 void
 LightSampler::
-sample_naive(MatX3 &samples, int n, double phi_min, double phi_max) const
+sample_naive(MatrixX3d &samples, int n, double phi_min, double phi_max) const
 {
   std::random_device rd;
   std::mt19937 gen(rd());

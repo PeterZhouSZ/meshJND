@@ -6,12 +6,13 @@ using namespace std;
 
 int main()
 {
-  int n = 12;
+  int n = 1024;
 
+  Eigen::Vector3d up(1., 1., 1.); up.normalize();
   Eigen::MatrixX3d light;
 
   LightSampler sampler;
-  sampler.sample(light, n, LightSampler::NAIVE, 0.4*M_PI, 0.4*M_PI);
+  sampler.sample_to_global(light, n, LightSampler::NAIVE, up, 0, 0.5*M_PI);
 
   std::cout << "sampling done" << std::endl;
 

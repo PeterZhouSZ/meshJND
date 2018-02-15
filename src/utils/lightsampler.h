@@ -4,13 +4,10 @@
 #include <cmath>
 
 #include <Eigen/Core>
+using namespace Eigen;
 
 class LightSampler
 {
-private:
-  typedef Eigen::MatrixX3d MatX3;
-  typedef Eigen::Vector3d  Vec3;
-
 public:
   enum Method { NAIVE };
 
@@ -19,23 +16,23 @@ public:
   virtual ~LightSampler() {}
 
 public:
-  void sample(MatX3& samples, int n,
+  void sample(MatrixX3d& samples, int n,
               Method method=NAIVE,
               double phi_min = 0.,
               double phi_max = M_PI) const;
 
-  void sample_to_global(MatX3& samples, int n,
+  void sample_to_global(MatrixX3d& samples, int n,
                         Method method=NAIVE,
-                        const Vec3& up = Vec3(0., 0., 1.),
+                        const Vector3d& up = Vector3d::UnitZ(),
                         double phi_min = 0.,
                         double phi_max = M_PI) const;
 
-  void to_global(const MatX3& local,
-                 MatX3& global,
-                 const Vec3& up = Vec3(0., 0., 1.)) const;
+  void to_global(const MatrixX3d& local,
+                 MatrixX3d& global,
+                 const Vector3d& up = Vector3d::UnitZ()) const;
 
 protected:
-  void sample_naive(MatX3& samples, int n,
+  void sample_naive(MatrixX3d& samples, int n,
                     double phi_min = 0., double phi_max = M_PI) const;
 };
 
