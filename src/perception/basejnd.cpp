@@ -2,13 +2,38 @@
 
 #include "mesh.h"
 
+void
+BaseJND::
+set_global_lightsource(const Vector3d &ldir)
+{
+  MatrixX3d l;
+  l.resize(1, 3); l.setZero();
+  l.row(0) = ldir;
+
+  set_global_lightsource(l);
+}
+
+void
+BaseJND::
+set_global_lightsource(const MatrixX3d &ldir)
+{
+  if(!mesh)
+    return;
+
+  m_light.clear();
+  m_light.reserve(m_mesh->vertices_size());
+
+  for(int i=0; i<m_mesh->vertices_size(); ++i)
+    m_light.push_back(ldir);
+}
+
 double
 BaseJND::
 compute_displacement_threshold(int id, const Vector3d& ldir, const Vector3d& dir)
 {
   //inveral boundaries
   double a = 0;
-  double b;
+  double b = 0.1 * m_mesh->bbox().diagonal().norm();
 
   //initialize threshold to upper boundary
   double T = b;
@@ -36,6 +61,19 @@ compute_displacement_threshold(int id, const Vector3d& ldir, const Vector3d& dir
   return T;
 }
 
+double
+BaseJND::
+compute_displacement_threshold(int id, const Vector3d &dir)
+{
+  VectorXd T;
+  T.resize(m_light[id].rows()); T.setOnes();
+
+  for(unsigned int i=0; i<m_light[id].rows(); ++i)
+    T(i) = compute_displacement_threshold(id, m_light[id].row(i), dir);
+
+  return T.minCoeff();
+}
+
 void
 BaseJND::
 compute_displacement_threshold(const std::vector<Vector3d> &dir, VectorXd &out)
@@ -52,8 +90,6 @@ compute_displacement_threshold(const std::vector<Vector3d> &dir, VectorXd &out)
   out.resize(m_mesh->vertices_size());
   out.setZero();
 
-  Vector3d ldir;
-
   for(unsigned int i=0; i<m_mesh->vertices_size(); ++i)
-    out(i) = compute_displacement_threshold(i, ldir, dir[i]);
+    out(i) = compute_displacement_threshold(i, dir[i]);
 }

@@ -39,14 +39,20 @@ public:
     m_interval_width = interval_width;
   }
 
+  void set_global_lightsource(const Vector3d& ldir);
+
+  void set_global_lightsource(const MatrixX3d& ldir);
+
 public:
   ///performs precomputation needed to compute the displacement threshold
   virtual void init() = 0;
 
-  ///computes the displacement threshold of a vertex in a given direction dir
+  ///computes the displacement threshold of a vertex in a given a light direction ldir and a noise direction dir
   /// implements alogorithm 1 of:
   /// "Just noticeable distortion profile for flat-shaded 3D mesh surfaces." IEEE transactions on visualization and computer graphics 22.11 (2016).
   double compute_displacement_threshold(int id, const Vector3d& ldir, const Vector3d& dir);
+
+  double compute_displacement_threshold(int id, const Vector3d& dir);
 
   ///computes the displacement threshold of all the vertices in the direction dir
   void compute_displacement_threshold(const std::vector< Vector3d >& dir,
