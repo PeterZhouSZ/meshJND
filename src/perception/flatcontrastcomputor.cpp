@@ -4,16 +4,10 @@
 
 double
 FlatContrastComputor::
-compute(const LightType &ldir, int id)
+compute(const Eigen::Vector3d &n1,
+        const Eigen::Vector3d &n2,
+        const Eigen::Vector3d &ldir)
 {
-  BaseMesh::Edge e(id);
-
-  BaseMesh::Face f1 = m_mesh->face(m_mesh->halfedge(e, 0));
-  BaseMesh::Face f2 = m_mesh->face(m_mesh->halfedge(e, 1));
-
-  Eigen::Vector3d n1 = m_mesh->normal(f1);
-  Eigen::Vector3d n2 = m_mesh->normal(f2);
-
   double cos_phi   = fabs(n1.dot(n2));
   double gcontrast = sqrt(fabs(1. - cos_phi)/(1. + cos_phi));
 
@@ -26,6 +20,21 @@ compute(const LightType &ldir, int id)
   double lcontrast = (theta == 0 || std::isnan(alpha)) ? 0. : alpha / theta;
 
   return lcontrast * gcontrast;
+}
+
+double
+FlatContrastComputor::
+compute(const LightType &ldir, int id)
+{
+  BaseMesh::Edge e(id);
+
+  BaseMesh::Face f1 = m_mesh->face(m_mesh->halfedge(e, 0));
+  BaseMesh::Face f2 = m_mesh->face(m_mesh->halfedge(e, 1));
+
+  Eigen::Vector3d n1 = m_mesh->normal(f1);
+  Eigen::Vector3d n2 = m_mesh->normal(f2);
+
+  return compute(n1, n2, ldir);
 }
 
 void

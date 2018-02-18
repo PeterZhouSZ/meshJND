@@ -5,6 +5,22 @@
 
 double
 FlatFrequencyComputor::
+compute(const Eigen::Vector3d &p1,
+        const Eigen::Vector3d &p2,
+        const CamType& cam)
+{
+  double cdist  = (0.5*(p1+p2) - cam).norm();
+  double length = (p1-p2).norm();
+
+  //convert length to cpd
+  int    npx = wDistance_to_pixel(m_scene.hvport, m_scene.fov, cdist, length);
+  double cpd = pixel_to_cpd(m_screen.hres, m_screen.vres, m_screen.diag, m_user.dist, npx);
+
+  return cpd;
+}
+
+double
+FlatFrequencyComputor::
 compute(const LightType &ldir, const CamType& cam, int id)
 {
   //ldir is not used here
@@ -17,14 +33,7 @@ compute(const LightType &ldir, const CamType& cam, int id)
   Eigen::Vector3d p1 = m_mesh->position(v1);
   Eigen::Vector3d p2 = m_mesh->position(v2);
 
-  double cdist  = (0.5*(p1+p2) - cam).norm();
-  double length = (p1-p2).norm();
-
-  //convert length to cpd
-  int    npx = wDistance_to_pixel(m_scene.hvport, m_scene.fov, cdist, length);
-  double cpd = pixel_to_cpd(m_screen.hres, m_screen.vres, m_screen.diag, m_user.dist, npx);
-
-  return cpd;
+  return compute(p1, p2, cam);
 }
 
 void
