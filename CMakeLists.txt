@@ -69,6 +69,7 @@ SET(MESHJND_SRC_FILES
     src/perception/flatcontrastcomputor.cpp
     src/perception/flatfrequencycomputor.cpp
     src/perception/basejnd.cpp
+    src/perception/flatjnd.cpp
 
     src/utils/colormap.cpp
     src/utils/lightsampler.cpp
@@ -86,6 +87,7 @@ SET(MESHJND_HEADER_FILES
     src/perception/basecontrastcomputor.h
     src/perception/basefrequencycomputor.h
     src/perception/basejnd.h
+    src/perception/flatjnd.h
     src/perception/flatcontrastcomputor.h
     src/perception/flatfrequencycomputor.h
 
