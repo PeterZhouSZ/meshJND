@@ -21,11 +21,17 @@ set_global_lightsource(const MatrixX3d &ldir)
   if(!m_mesh)
     return;
 
+  if(m_verbose_level > 1)
+    std::cout << "[BaseJND] setting up global light sources ... " << std::flush;
+
   m_light.clear();
   m_light.reserve(m_mesh->vertices_size());
 
   for(int i=0; i<m_mesh->vertices_size(); ++i)
     m_light.push_back(ldir);
+
+  if(m_verbose_level > 1)
+    std::cout << "done." << std::endl;
 }
 
 void
@@ -35,14 +41,21 @@ set_local_lightsource(int nSamples)
   if(!m_mesh)
     return;
 
+  if(m_verbose_level > 1)
+    std::cout << "[BaseJND] setting up local light samples ... " << std::flush;
+
   LightSampler lsampler;
 
+  m_light.clear();
   m_light.reserve(m_mesh->vertices_size());
   for(Mesh::Vertex_iterator it=m_mesh->vertices_begin(); it!=m_mesh->vertices_end(); ++it){
     MatrixX3d samples;
     lsampler.sample_to_global(samples, nSamples, m_mesh->normal(*it), 0.333*M_PI, 0.5*M_PI);
     m_light.push_back(samples);
   }
+
+  if(m_verbose_level > 1)
+    std::cout << "done." << std::endl;
 }
 
 double
@@ -105,9 +118,26 @@ compute_displacement_threshold(const CamType& cam, const std::vector<Vector3d> &
   if(m_need_init) //init if necessary
     init();
 
+  if(m_verbose_level > 1)
+    std::cout << "[BaseJND] computing displacement threshold ... " << std::flush;
+
   out.resize(m_mesh->vertices_size());
   out.setZero();
 
-  for(unsigned int i=0; i<m_mesh->vertices_size(); ++i)
+  int previous_percent = 0.;
+  for(unsigned int i=0; i<m_mesh->vertices_size(); ++i){
+
+    if(m_verbose_level > 1){
+      int percent = int(100. * double(i)/double(m_mesh->vertices_size()));
+      if(percent - previous_percent > 10){
+        std::cout <<percent << "% ... " << std::flush;
+        previous_percent = percent;
+      }
+    }
+
     out(i) = compute_displacement_threshold(i, cam, dir[i]);
+  }
+
+  if(m_verbose_level > 1)
+    std::cout << "done." << std::endl;
 }

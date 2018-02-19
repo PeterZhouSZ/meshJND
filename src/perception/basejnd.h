@@ -12,11 +12,21 @@ class BaseJND
 {
 public:
   BaseJND()
-    : m_mesh(0), m_tolerence(0.95), m_precision(3e-2), m_interval_width(1e-3), m_need_init(true)
+    : m_mesh(0),
+      m_tolerence(0.95),
+      m_precision(3e-2),
+      m_interval_width(1e-3),
+      m_need_init(true),
+      m_verbose_level(1)
   {}
 
   BaseJND(double tolerence, double precision, double interval_width)
-    : m_mesh(0), m_tolerence(tolerence), m_precision(precision), m_interval_width(interval_width), m_need_init(true)
+    : m_mesh(0),
+      m_tolerence(tolerence),
+      m_precision(precision),
+      m_interval_width(interval_width),
+      m_need_init(true),
+      m_verbose_level(1)
   {}
 
   virtual ~BaseJND()
@@ -43,6 +53,11 @@ public:
   void set_global_lightsource(const MatrixX3d& ldir);
 
   void set_local_lightsource(int nSamples);
+
+  void set_verbose_level(int level)
+  {
+    m_verbose_level = level;
+  }
 
 public:
   ///performs precomputation needed to compute the displacement threshold
@@ -81,6 +96,9 @@ protected:
   double m_interval_width;
 
   bool m_need_init;
+
+  //feedback options
+  int m_verbose_level;
 
   //light samples
   std::vector < MatrixX3d > m_light;

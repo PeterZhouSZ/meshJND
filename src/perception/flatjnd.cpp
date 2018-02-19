@@ -9,14 +9,25 @@ init()
   if(!m_mesh) // make sure that the mesh is assigned
     return;
 
+  if(m_verbose_level > 1)
+    std::cout << "[FlatJND] Initialing JND computor ... " << std::endl;
+
+  if(m_verbose_level > 1)
+    std::cout << "  * computing mesh attibutes ... " << std::flush;
   //make sure that the mesh has its normals and bounding box computed
   m_mesh->update_face_normals();
   m_mesh->update_vertex_normals();
   m_mesh->compute_bounding_box();
 
+  if(m_verbose_level > 1)
+    std::cout << "done." << std::endl;
+
   //set the mesh in the contrast computor and frequency computor
   m_cc.set_mesh(m_mesh);
   m_fc.set_mesh(m_mesh);
+
+  if(m_verbose_level > 1)
+    std::cout << "  * computing affected facepairs ... " << std::flush;
 
   //get the affected face pairs for each vertex
   m_fp.clear();
@@ -44,7 +55,13 @@ init()
     m_fp.push_back(fpairs);
   }
 
+  if(m_verbose_level > 1)
+    std::cout << "done." << std::endl;
+
   m_need_init = false;
+
+  if(m_verbose_level > 1)
+    std::cout << "done." << std::endl;
 }
 
 double

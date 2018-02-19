@@ -9,7 +9,8 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.2.0)
 ################################################################################
 
 ## PROJECT #####################################################################
-SET( COMPILE_TESTS true )
+SET( COMPILE_TESTS true   )
+SET( SHARED_LIBRARY false )
 
 ## C++ #########################################################################
 
@@ -109,7 +110,11 @@ SET(FILES
 ## LIBRARIES                                                                  ##
 ################################################################################
 
-add_library(jnd ${FILES})
+if(SHARED_LIBRARY)
+    add_library(jnd SHARED ${FILES})
+else()
+    add_library(jnd STATIC ${FILES})
+endif()
 
 ################################################################################
 ## EXECUTABLES                                                                ##
