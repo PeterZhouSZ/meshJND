@@ -17,7 +17,7 @@ public:
       m_precision(3e-2),
       m_interval_width(1e-3),
       m_need_init(true),
-      m_verbose_level(1)
+      m_verbose_level(2)
   {}
 
   BaseJND(double tolerence, double precision, double interval_width)
@@ -26,7 +26,7 @@ public:
       m_precision(precision),
       m_interval_width(interval_width),
       m_need_init(true),
-      m_verbose_level(1)
+      m_verbose_level(2)
   {}
 
   virtual ~BaseJND()

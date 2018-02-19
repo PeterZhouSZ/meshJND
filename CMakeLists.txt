@@ -130,4 +130,7 @@ if(COMPILE_TESTS)
 
     add_executable(test_sampler src/test/test_sampler.cpp)
     target_link_libraries(test_sampler jnd)
+
+    add_executable(test_flatjnd src/test/test_flatjnd.cpp)
+    target_link_libraries(test_flatjnd jnd)
 endif()

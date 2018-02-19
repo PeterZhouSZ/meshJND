@@ -58,7 +58,7 @@ protected:
 
   //TODO: figure out a way to move to BaseJND because it will ge repetitive when
   //      implementing the SmoothJND class
-
+public:
   void set_CSF(const SarkisonCSF& csf)
   {
     m_threshold.param().csf = csf;

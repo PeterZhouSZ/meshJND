@@ -109,11 +109,15 @@ void
 BaseJND::
 compute_displacement_threshold(const CamType& cam, const std::vector<Vector3d> &dir, VectorXd &out)
 {
-  if(!m_mesh) //make sure that there is a mesh
+  if(!m_mesh){ //make sure that there is a mesh
+    std::cerr << "[BaseJND] Error : no mesh !!" << std::endl;
     return;
+  }
 
-  if(dir.size() != m_mesh->vertices_size()) //make sure that the direction vector is of correct length
+  if(dir.size() != m_mesh->vertices_size()){
+    std::cerr << "[BaseJND] Error : direction vector is not compatible !!" << std::endl;
     return;
+  }
 
   if(m_need_init) //init if necessary
     init();
