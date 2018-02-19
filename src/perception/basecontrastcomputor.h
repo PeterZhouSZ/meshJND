@@ -1,9 +1,7 @@
 #ifndef BASECONTRASTCOMPUTOR_H
 #define BASECONTRASTCOMPUTOR_H
 
-#include <Eigen/Core>
-
-typedef Eigen::Vector3d LightType;
+#include "types.h"
 
 class Mesh;
 

@@ -90,6 +90,7 @@ SET(MESHJND_HEADER_FILES
     src/perception/flatjnd.h
     src/perception/flatcontrastcomputor.h
     src/perception/flatfrequencycomputor.h
+    src/perception/types.h
 
     src/utils/colormap.h
     src/utils/genericparametricmodel.h

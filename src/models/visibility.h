@@ -43,9 +43,9 @@ public:
     double T  = in(1); //threshold
 
     if(T == 0.)
-      return dc == T;
+      out = OutputType(dc == T);
 
-    return m_param(dc/T);
+    out = m_param(dc/T);
   }
 
 //-----------------------------------------------------------------------------------

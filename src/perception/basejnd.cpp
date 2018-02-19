@@ -17,7 +17,7 @@ void
 BaseJND::
 set_global_lightsource(const MatrixX3d &ldir)
 {
-  if(!mesh)
+  if(!m_mesh)
     return;
 
   m_light.clear();
