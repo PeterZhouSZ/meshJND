@@ -54,6 +54,36 @@ protected:
                                     const CamType& cam,
                                     const Vector3d &displacement) const;
 
+// perceptual parameters --------------------------------------------------------
+
+  //TODO: figure out a way to move to BaseJND because it will ge repetitive when
+  //      implementing the SmoothJND class
+
+  void set_CSF(const SarkisonCSF& csf)
+  {
+    m_threshold.param().csf = csf;
+  }
+
+  void set_Masking (const DalyMasking& masking)
+  {
+    m_threshold.param().masking = masking;
+  }
+
+  void set_screen(const ScreenParam& screen)
+  {
+    m_fc.set_screenParam(screen);
+  }
+
+  void set_user(const UserParam& user)
+  {
+    m_fc.set_userParam(user);
+  }
+
+  void set_scene(const SceneParam& scene)
+  {
+    m_fc.set_sceneParam(scene);
+  }
+
 // additional functions ---------------------------------------------------------
 
 protected:

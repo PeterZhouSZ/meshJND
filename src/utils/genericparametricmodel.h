@@ -37,6 +37,9 @@ public:
 public:
   void setParameters(const ParameterType& param) { m_param = param; }
 
+  const ParameterType& param() const { return m_param; } //read only
+  ParameterType& param() { return m_param; }
+
 //-----------------------------------------------------------------------------------
 
 public:

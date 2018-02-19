@@ -36,7 +36,6 @@ to_global(const MatrixX3d &local, MatrixX3d &global, const Vector3d &up) const
   else if ( c == -1. ) //opposite direction
     global = -local;
   else{
-
     Vector3d v = oUp.cross(up);
     Matrix3d vx;
     vx << 0, -v(2), v(1),
