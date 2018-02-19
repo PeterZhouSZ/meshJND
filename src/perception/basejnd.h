@@ -42,6 +42,8 @@ public:
 
   void set_global_lightsource(const MatrixX3d& ldir);
 
+  void set_local_lightsource(int nSamples);
+
 public:
   ///performs precomputation needed to compute the displacement threshold
   virtual void init() = 0;

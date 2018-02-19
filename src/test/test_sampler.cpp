@@ -12,7 +12,7 @@ int main()
   Eigen::MatrixX3d light;
 
   LightSampler sampler;
-  sampler.sample_to_global(light, n, LightSampler::NAIVE, up, 0, 0.5*M_PI);
+  sampler.sample_to_global(light, n, up, 0, 0.5*M_PI);
 
   std::cout << "sampling done" << std::endl;
 

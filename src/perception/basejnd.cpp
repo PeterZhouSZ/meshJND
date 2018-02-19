@@ -1,6 +1,7 @@
 #include "basejnd.h"
 
 #include "mesh.h"
+#include "lightsampler.h"
 
 void
 BaseJND::
@@ -25,6 +26,23 @@ set_global_lightsource(const MatrixX3d &ldir)
 
   for(int i=0; i<m_mesh->vertices_size(); ++i)
     m_light.push_back(ldir);
+}
+
+void
+BaseJND::
+set_local_lightsource(int nSamples)
+{
+  if(!m_mesh)
+    return;
+
+  LightSampler lsampler;
+
+  m_light.reserve(m_mesh->vertices_size());
+  for(Mesh::Vertex_iterator it=m_mesh->vertices_begin(); it!=m_mesh->vertices_end(); ++it){
+    MatrixX3d samples;
+    lsampler.sample_to_global(samples, nSamples, m_mesh->normal(*it), 0.333*M_PI, 0.5*M_PI);
+    m_light.push_back(samples);
+  }
 }
 
 double

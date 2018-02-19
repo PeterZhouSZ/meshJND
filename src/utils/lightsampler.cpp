@@ -5,7 +5,7 @@
 
 void
 LightSampler::
-sample(MatrixX3d &samples, int n, Method method, double phi_min, double phi_max) const
+sample(MatrixX3d &samples, int n, double phi_min, double phi_max, Method method) const
 {
   switch(method){
     case NAIVE:
@@ -17,10 +17,10 @@ sample(MatrixX3d &samples, int n, Method method, double phi_min, double phi_max)
 
 void
 LightSampler::
-sample_to_global(MatrixX3d &samples, int n, Method method, const Vector3d &up, double phi_min, double phi_max) const
+sample_to_global(MatrixX3d &samples, int n, const Vector3d &up, double phi_min, double phi_max, Method method) const
 {
   MatrixX3d local;
-  sample(local, n, method, phi_min, phi_max);
+  sample(local, n, phi_min, phi_max, method);
   to_global(local, samples, up);
 }
 
