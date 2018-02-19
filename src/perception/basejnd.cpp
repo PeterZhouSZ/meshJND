@@ -50,7 +50,7 @@ set_local_lightsource(int nSamples)
   m_light.reserve(m_mesh->vertices_size());
   for(Mesh::Vertex_iterator it=m_mesh->vertices_begin(); it!=m_mesh->vertices_end(); ++it){
     MatrixX3d samples;
-    lsampler.sample_to_global(samples, nSamples, m_mesh->normal(*it), 0.333*M_PI, 0.5*M_PI);
+    lsampler.sample_to_global(samples, nSamples, m_mesh->normal(*it), 0.4*M_PI, 0.45*M_PI);
     m_light.push_back(samples);
   }
 
@@ -64,7 +64,7 @@ compute_displacement_threshold(int id, const LightType& ldir, const CamType& cam
 {
   //inveral boundaries
   double a = 0;
-  double b = 0.1 * m_mesh->bbox().diagonal().norm();
+  double b = 0.1*m_mesh->bbox().diagonal().norm();
 
   //initialize threshold to upper boundary
   double T = b;
@@ -77,6 +77,8 @@ compute_displacement_threshold(int id, const LightType& ldir, const CamType& cam
 
     //update visibility
     v = compute_visibility(id, ldir, cam, T*dir);
+
+//    std::cout << T << ", " << v << std::endl;
 
     //update interval
     if(v > m_tolerence)

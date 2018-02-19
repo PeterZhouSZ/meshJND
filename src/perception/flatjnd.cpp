@@ -89,13 +89,16 @@ compute_visibility(int id, const LightType &ldir, const CamType &cam, const Vect
 
     double dc = is_ambigous ? c+iC : fabs(c-iC);
 
-    double v_fp = std::max( m_visibility(VisibilityModel::InputType(dc, T1)),
-                            m_visibility(VisibilityModel::InputType(dc, T2)) );
+    double v_fp = iC;//std::max( m_visibility(VisibilityModel::InputType(dc, T1)),
+                     //       m_visibility(VisibilityModel::InputType(dc, T2)) );
+
+//    std::cout << iC << ", " << iF << ", " << T1 << std::endl;
 
     v = std::max(v, v_fp);
 
-    if(v == 1.) //no need to continue
-      break;
+//    if(v == 1.) //no need to continue
+//      break;
+//    break;
   }
 
   return v;

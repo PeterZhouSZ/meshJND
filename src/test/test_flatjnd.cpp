@@ -37,11 +37,16 @@ int main()
   jnd.set_CSF(csf);
   jnd.set_Masking(masking);
 
+  jnd.set_algorithm_parameters(0.90, 0.05, 1.e-1);
+
   VectorXd threshold;
   jnd.compute_displacement_threshold(cam, dir, threshold);
 
   mesh.store_as_vertex_color(threshold, threshold.maxCoeff());
   mesh.write("flatjnd.off");
+
+  std::cout << "max threshold : " << threshold.maxCoeff() << std::endl;
+  std::cout << "min threshold : " << threshold.minCoeff() << std::endl;
 
   return 0;
 }
