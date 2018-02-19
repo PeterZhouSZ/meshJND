@@ -6,20 +6,51 @@ void
 FlatJND::
 init()
 {
+  if(!m_mesh) // make sure that the mesh is assigned
+    return;
 
+  //get the affected face pairs for each vertex
+  m_fp.clear();
+  m_fp.reserve(m_mesh->vertices_size());
+
+  for(Mesh::Vertex_iterator it=m_mesh->vertices_begin(); it!= m_mesh->vertices_end(); ++it){
+    Mesh::Vertex v = *it;
+
+    Mesh::Halfedge h0 = m_mesh->halfedge(v);
+    Mesh::Halfedge h  = h0;
+
+    FacePairs fpairs;
+    do{
+      fpairs.push_back(FacePair(m_mesh->edge(h).idx()));
+      fpairs.push_back(FacePair(m_mesh->edge(m_mesh->next_halfedge(h)).idx()));
+
+      h = m_mesh->next_halfedge(m_mesh->opposite_halfedge(h));
+    }while(h != h0);
+
+    m_fp.push_back(fpairs);
+  }
+
+  m_need_init = false;
 }
 
 double
 FlatJND::
 compute_visibility(int id, const Vector3d &ldir, const Vector3d &displacement)
 {
-//  double initial_contrast;
-//  double current_contrast;
+  double v = 0.;
 
-//  double T;
+  FacePairs& fp = m_fp[id];
+  for(unsigned int i=0; i<fp.size(); ++i){
+    double f ;   //frequency
+    double ic = m_cc.compute(ldir, fp[i].id);  //initial contrast
 
-//  Vector2d in;
-//  in << initial_contrast-current_contrast, T;
+    double c ;  //contrast
 
-//  return m_visibility(in);
+    double T = m_threshold_model(NWHWD16_Threshold::InputType(ic, f));
+    double v_fp = m_visibility(VisibilityModel::InputType(c-ic, T));
+
+    v = std::max(v, v_fp);
+  }
+
+  return v;
 }

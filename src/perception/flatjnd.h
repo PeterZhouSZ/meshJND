@@ -16,9 +16,20 @@ class FlatJND
 // internal Type ----------------------------------------------------------------
 
 protected:
-  struct FacePairs{
+  struct FacePair{
 
+    FacePair(int i=-1)
+      : id(i)
+    {}
+
+    bool is_valid() const;
+
+    // attributes --------------------------------------------------------------
+
+    int id;
   };
+
+  typedef std::vector<FacePair> FacePairs;
 
 // constructors -----------------------------------------------------------------
 
@@ -54,7 +65,7 @@ protected:
   FlatContrastComputor  m_cc;
   FlatFrequencyComputor m_fc;
 
-  std::vector< FacePairs > m_affected_elements;
+  std::vector< FacePairs > m_fp;
 };
 
 #endif //FLATJND_H
