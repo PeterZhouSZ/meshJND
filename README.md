@@ -1,6 +1,9 @@
 meshJND
 =======
+#Updates
+flatJND is not yet functional, should be soon !!
 
+#About
 An implementation of an algorithm that computes the **J**ust **N**oticeable **D**istortion for 3D meshes.
 
 For more details check:
