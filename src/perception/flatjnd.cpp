@@ -58,16 +58,22 @@ compute_visibility(int id, const LightType &ldir, const CamType &cam, const Vect
     double iF = m_fc.compute(ldir, cam, m_mesh->edge(Mesh::Halfedge(fp[i].id)).idx());   //initial frequency
     double iC = m_cc.compute(ldir, m_mesh->edge(Mesh::Halfedge(fp[i].id)).idx())     ;   //initial contrast
 
-    double c = contrast(fp[i], ldir, displacement); //uses eq 9 to compute new normal and then evaluates contrast
-    double f = frequency(fp[i], cam, displacement); //uses eq 10 to compute new distance and then evaluates frequency
+    //uses eq 9 to compute new normal and then evaluates contrast
+    //return negative value if ambigous case (eq 12)
+    double c = contrast(fp[i], ldir, displacement);
+    //uses eq 10 to compute new distance and then evaluates frequency
+    double f = frequency(fp[i], cam, displacement);
 
     double T1 = m_threshold(NWHWD16_Threshold::InputType(iC, iF));
     double T2 = m_threshold(NWHWD16_Threshold::InputType(iC, f ));
 
-    double dc = is_ambigous(fp, d) ? c+iC : fabs(c-iC); //eq 12.
+    bool is_ambigous = c < 0.;
+    c = fabs(c); //we need to positive value
+
+    double dc = is_ambigous ? c+iC : fabs(c-iC);
 
     double v_fp = std::max( m_visibility(VisibilityModel::InputType(dc, T1)),
-                            m_visibility(VisibilityModel::InputType(dc, T2)));
+                            m_visibility(VisibilityModel::InputType(dc, T2)) );
 
     v = std::max(v, v_fp);
 
@@ -84,6 +90,8 @@ contrast(const FacePair& fp, const LightType& l, const Vector3d& d) const
 {
   Vector3d n1(Vector3d::Zero());
   Vector3d n2(Vector3d::Zero());
+
+  double sign = 1.; //indicates whether there is an could have been an ambigous case (eq 12 TVCG paper)
 
   Mesh::Halfedge h(fp.id);
 
@@ -114,6 +122,9 @@ contrast(const FacePair& fp, const LightType& l, const Vector3d& d) const
 
     n1 = (v2-(v1+d)).cross(v3-(v1+d)).normalized();
     n2 = (v2-(v1+d)).cross(v4-(v1+d)).normalized();
+
+    Vector3d t = (v4 - 0.5*(v1+v2)).normalized();
+    sign = m_mesh->normal(m_mesh->face(h)).dot(t) * n1.dot(t) < 0. ? -1. : 1.;
   }
   else{
 
@@ -138,9 +149,13 @@ contrast(const FacePair& fp, const LightType& l, const Vector3d& d) const
     Vector3d v1 = m_mesh->position(m_mesh->to_vertex(m_mesh->next_halfedge(h))); // the vertex that is moving
     Vector3d v2 = m_mesh->position(m_mesh->from_vertex(h));
     Vector3d v3 = m_mesh->position(m_mesh->to_vertex(h));
+    Vector3d v4 = m_mesh->position(m_mesh->to_vertex((m_mesh->next_halfedge(m_mesh->opposite_halfedge(h)))));
 
     n1 = ((v1+d)-v2).cross(v3-v2).normalized();
     n2 = m_mesh->normal(m_mesh->face(m_mesh->opposite_halfedge(h)));
+
+    Vector3d t = (v4 - 0.5*(v2+v3)).normalized();
+    sign = m_mesh->normal(m_mesh->face(h)).dot(t) * n1.dot(t) < 0. ? -1. : 1.;
   }
 
   return m_cc.compute(n1, n2, l);
@@ -202,9 +217,3 @@ frequency(const FacePair& fp, const CamType& c, const Vector3d& d) const
   return m_fc.compute(a, b, c);
 }
 
-bool
-FlatJND::
-is_ambigous(const FacePair &fp, const Vector3d &d) const
-{
-
-}
