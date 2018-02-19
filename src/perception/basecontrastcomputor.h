@@ -23,8 +23,8 @@ public:
 
   void set_mesh(Mesh* mesh) { m_mesh = mesh; }
 
-  virtual double compute(const LightType& ldir, int id) = 0;
-  virtual void   compute(const LightType& ldir, Eigen::VectorXd& out) = 0;
+  virtual double compute(const LightType& ldir, int id) const = 0;
+  virtual void   compute(const LightType& ldir, Eigen::VectorXd& out) const = 0;
 
 protected:
   Mesh* m_mesh;

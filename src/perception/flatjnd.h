@@ -18,15 +18,18 @@ class FlatJND
 protected:
   struct FacePair{
 
-    FacePair(int i=-1)
-      : id(i)
+    FacePair(int i=-1, bool bfs = false)
+      : id(i), both_face_change(bfs)
     {}
 
-    bool is_valid() const;
+    // functions ---------------------------------------------------------------
+    /// computes the contrast for a given displacement magnitude
+    double contrast(Mesh* mesh, const FlatContrastComputor& cc, const LightType& l, const Vector3d& d) const;
 
     // attributes --------------------------------------------------------------
 
     int id;
+    bool both_face_change;
   };
 
   typedef std::vector<FacePair> FacePairs;
@@ -52,8 +55,9 @@ public:
 
 protected:
   virtual double compute_visibility(int id,
-                                    const Vector3d &ldir,
-                                    const Vector3d &displacement);
+                                    const LightType &ldir,
+                                    const CamType& cam,
+                                    const Vector3d &displacement) const;
 
 // additional functions ---------------------------------------------------------
 

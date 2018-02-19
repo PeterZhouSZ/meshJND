@@ -7,7 +7,7 @@ double
 FlatFrequencyComputor::
 compute(const Eigen::Vector3d &p1,
         const Eigen::Vector3d &p2,
-        const CamType& cam)
+        const CamType& cam) const
 {
   double cdist  = (0.5*(p1+p2) - cam).norm();
   double length = (p1-p2).norm();
@@ -21,7 +21,7 @@ compute(const Eigen::Vector3d &p1,
 
 double
 FlatFrequencyComputor::
-compute(const LightType &ldir, const CamType& cam, int id)
+compute(const LightType &ldir, const CamType& cam, int id) const
 {
   //ldir is not used here
 
@@ -38,7 +38,7 @@ compute(const LightType &ldir, const CamType& cam, int id)
 
 void
 FlatFrequencyComputor::
-compute(const LightType &ldir, const CamType& cam, Eigen::VectorXd &out)
+compute(const LightType &ldir, const CamType& cam, Eigen::VectorXd &out) const
 {
   out.resize(m_mesh->edges_size());
   out.setZero();

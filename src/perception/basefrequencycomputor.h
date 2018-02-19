@@ -34,8 +34,8 @@ public:
   void set_userParam  (const UserParam&   user  ) { m_user   = user  ; }
   void set_sceneParam (const SceneParam&  scene ) { m_scene  = scene ; }
 
-  virtual double compute(const LightType &ldir, const CamType& cam, int id) = 0;
-  virtual void   compute(const LightType& ldir, const CamType& cam, Eigen::VectorXd& out) = 0;
+  virtual double compute(const LightType &ldir, const CamType& cam, int id) const = 0;
+  virtual void   compute(const LightType& ldir, const CamType& cam, Eigen::VectorXd& out) const = 0;
 
 protected:
   Mesh* m_mesh;

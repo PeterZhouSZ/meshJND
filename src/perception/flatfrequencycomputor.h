@@ -26,10 +26,10 @@ public:
 
   double compute(const Eigen::Vector3d& p1,
                  const Eigen::Vector3d& p2,
-                 const CamType& cam);
+                 const CamType& cam) const;
 
-  virtual double compute(const LightType &ldir, const CamType& cam, int id);
-  virtual void   compute(const LightType &ldir, const CamType& cam, Eigen::VectorXd& out);
+  virtual double compute(const LightType &ldir, const CamType& cam, int id) const;
+  virtual void   compute(const LightType &ldir, const CamType& cam, Eigen::VectorXd& out) const;
 };
 
 #endif // FLATFREQUENCYCOMPUTOR_H

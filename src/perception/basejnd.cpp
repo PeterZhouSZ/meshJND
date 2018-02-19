@@ -29,7 +29,7 @@ set_global_lightsource(const MatrixX3d &ldir)
 
 double
 BaseJND::
-compute_displacement_threshold(int id, const Vector3d& ldir, const Vector3d& dir)
+compute_displacement_threshold(int id, const LightType& ldir, const CamType& cam, const Vector3d& dir)
 {
   //inveral boundaries
   double a = 0;
@@ -39,13 +39,13 @@ compute_displacement_threshold(int id, const Vector3d& ldir, const Vector3d& dir
   double T = b;
 
   //initialize visibility
-  double v = compute_visibility(id, ldir, T*dir);
+  double v = compute_visibility(id, ldir, cam, T*dir);
   while( fabs(v-m_tolerence) > m_precision ){
     //get interval middle
     T = a + 0.5*(b-a);
 
     //update visibility
-    v = compute_visibility(id, ldir, T*dir);
+    v = compute_visibility(id, ldir, cam, T*dir);
 
     //update interval
     if(v > m_tolerence)
@@ -63,20 +63,20 @@ compute_displacement_threshold(int id, const Vector3d& ldir, const Vector3d& dir
 
 double
 BaseJND::
-compute_displacement_threshold(int id, const Vector3d &dir)
+compute_displacement_threshold(int id, const CamType& cam, const Vector3d& dir)
 {
   VectorXd T;
   T.resize(m_light[id].rows()); T.setOnes();
 
   for(unsigned int i=0; i<m_light[id].rows(); ++i)
-    T(i) = compute_displacement_threshold(id, m_light[id].row(i), dir);
+    T(i) = compute_displacement_threshold(id, m_light[id].row(i), cam, dir);
 
   return T.minCoeff();
 }
 
 void
 BaseJND::
-compute_displacement_threshold(const std::vector<Vector3d> &dir, VectorXd &out)
+compute_displacement_threshold(const CamType& cam, const std::vector<Vector3d> &dir, VectorXd &out)
 {
   if(!m_mesh) //make sure that there is a mesh
     return;
@@ -91,5 +91,5 @@ compute_displacement_threshold(const std::vector<Vector3d> &dir, VectorXd &out)
   out.setZero();
 
   for(unsigned int i=0; i<m_mesh->vertices_size(); ++i)
-    out(i) = compute_displacement_threshold(i, dir[i]);
+    out(i) = compute_displacement_threshold(i, cam, dir[i]);
 }

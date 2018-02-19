@@ -6,7 +6,7 @@ double
 FlatContrastComputor::
 compute(const Eigen::Vector3d &n1,
         const Eigen::Vector3d &n2,
-        const Eigen::Vector3d &ldir)
+        const Eigen::Vector3d &ldir) const
 {
   double cos_phi   = fabs(n1.dot(n2));
   double gcontrast = sqrt(fabs(1. - cos_phi)/(1. + cos_phi));
@@ -24,7 +24,7 @@ compute(const Eigen::Vector3d &n1,
 
 double
 FlatContrastComputor::
-compute(const LightType &ldir, int id)
+compute(const LightType &ldir, int id) const
 {
   BaseMesh::Edge e(id);
 
@@ -39,7 +39,7 @@ compute(const LightType &ldir, int id)
 
 void
 FlatContrastComputor::
-compute(const LightType &ldir, Eigen::VectorXd &out)
+compute(const LightType &ldir, Eigen::VectorXd &out) const
 {
   out.resize(m_mesh->edges_size());
   out.setZero();
