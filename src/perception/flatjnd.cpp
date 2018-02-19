@@ -9,6 +9,10 @@ init()
   if(!m_mesh) // make sure that the mesh is assigned
     return;
 
+  //set the mesh in the contrast computor and frequency computor
+  m_cc.set_mesh(m_mesh);
+  m_fc.set_mesh(m_mesh);
+
   //get the affected face pairs for each vertex
   m_fp.clear();
   m_fp.reserve(m_mesh->vertices_size());
