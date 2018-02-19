@@ -22,12 +22,7 @@ protected:
       : id(i), both_face_change(bfs)
     {}
 
-    // functions ---------------------------------------------------------------
-    /// computes the contrast for a given displacement magnitude
-    double contrast(Mesh* mesh, const FlatContrastComputor& cc, const LightType& l, const Vector3d& d) const;
-
     // attributes --------------------------------------------------------------
-
     int id;
     bool both_face_change;
   };
@@ -60,6 +55,10 @@ protected:
                                     const Vector3d &displacement) const;
 
 // additional functions ---------------------------------------------------------
+
+protected:
+  double contrast(const FacePair& fp, const LightType& l, const Vector3d& d) const;
+  double frequency(const FacePair& fp, const CamType& c, const Vector3d& d) const;
 
 // attributes -------------------------------------------------------------------
 protected:
