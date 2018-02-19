@@ -37,7 +37,7 @@ public:
 //-----------------------------------------------------------------------------------
 
 public:
-  virtual void compute(const InputType &in, OutputType& out)
+  virtual void compute(const InputType &in, OutputType& out) const
   {
     double dc = in(0); //change in contrast
     double T  = in(1); //threshold

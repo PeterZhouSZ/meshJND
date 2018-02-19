@@ -58,13 +58,21 @@ compute_visibility(int id, const LightType &ldir, const CamType &cam, const Vect
     double iF = m_fc.compute(ldir, cam, m_mesh->edge(Mesh::Halfedge(fp[i].id)).idx());   //initial frequency
     double iC = m_cc.compute(ldir, m_mesh->edge(Mesh::Halfedge(fp[i].id)).idx())     ;   //initial contrast
 
-    double c = contrast(fp[i], ldir, displacement);
-    double f = frequency(fp[i], cam, displacement);
+    double c = contrast(fp[i], ldir, displacement); //uses eq 9 to compute new normal and then evaluates contrast
+    double f = frequency(fp[i], cam, displacement); //uses eq 10 to compute new distance and then evaluates frequency
 
-    double T = 0;//m_threshold_model(NWHWD16_Threshold::InputType(iC, iF));
-    double v_fp = 0;//m_visibility(VisibilityModel::InputType(c-iC, T));
+    double T1 = m_threshold(NWHWD16_Threshold::InputType(iC, iF));
+    double T2 = m_threshold(NWHWD16_Threshold::InputType(iC, f ));
+
+    double dc = is_ambigous(fp, d) ? c+iC : fabs(c-iC); //eq 12.
+
+    double v_fp = std::max( m_visibility(VisibilityModel::InputType(dc, T1)),
+                            m_visibility(VisibilityModel::InputType(dc, T2)));
 
     v = std::max(v, v_fp);
+
+    if(v == 1.) //no need to continue
+      break;
   }
 
   return v;
@@ -192,4 +200,11 @@ frequency(const FacePair& fp, const CamType& c, const Vector3d& d) const
 
 
   return m_fc.compute(a, b, c);
+}
+
+bool
+FlatJND::
+is_ambigous(const FacePair &fp, const Vector3d &d) const
+{
+
 }

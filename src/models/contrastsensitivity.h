@@ -34,7 +34,7 @@ public:
 //-----------------------------------------------------------------------------------
 
 public:
-  virtual void compute(const InputType& in, OutputType& out)
+  virtual void compute(const InputType& in, OutputType& out) const
   {
     out = (1.f - m_param(0) + in/m_param(1)) * exp( -pow(in, m_param(2)) );
   }
@@ -81,7 +81,7 @@ class BartenCSF
 
 //-----------------------------------------------------------------------------------
 
-  virtual void compute(const InputType& in, OutputType& out)
+  virtual void compute(const InputType& in, OutputType& out) const
   {
     double f = in(0); //frequency
     double l = in(1); //lumiance

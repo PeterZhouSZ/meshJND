@@ -40,12 +40,12 @@ public:
 //-----------------------------------------------------------------------------------
 
 public:
-  virtual void compute(const InputType& in, OutputType& out) = 0;
+  virtual void compute(const InputType& in, OutputType& out) const = 0;
 
 //-----------------------------------------------------------------------------------
 
 public:
-  OutputType compute(const InputType& in)
+  OutputType compute(const InputType& in) const
   {
     OutputType out;
     compute(in, out);
@@ -61,12 +61,12 @@ public:
       out.push_back( compute(i) );
   }
 
-  OutputType operator()(const InputType& in)
+  OutputType operator()(const InputType& in) const
   {
     return compute(in);
   }
 
-  void operator()(const InputType& in, OutputType& out)
+  void operator()(const InputType& in, OutputType& out) const
   {
     out = compute(in);
   }

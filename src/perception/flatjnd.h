@@ -59,10 +59,11 @@ protected:
 protected:
   double contrast(const FacePair& fp, const LightType& l, const Vector3d& d) const;
   double frequency(const FacePair& fp, const CamType& c, const Vector3d& d) const;
+  bool is_ambigous(const FacePair& fp, const Vector3d& d) const;
 
 // attributes -------------------------------------------------------------------
 protected:
-  NWHWD16_Threshold m_threshold_model;
+  NWHWD16_Threshold m_threshold;
   VisibilityModel   m_visibility;
 
   FlatContrastComputor  m_cc;

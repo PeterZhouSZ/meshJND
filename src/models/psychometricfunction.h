@@ -36,7 +36,7 @@ public:
 //-----------------------------------------------------------------------------------
 
 public:
-  virtual void compute(const InputType& in, OutputType& out)
+  virtual void compute(const InputType& in, OutputType& out) const
   {
     out = 1. - exp(-pow(in, m_param));
   }

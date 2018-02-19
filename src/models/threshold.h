@@ -45,7 +45,7 @@ class NWHWD16_Threshold
 //-----------------------------------------------------------------------------------
 
 public:
-  virtual void compute(const InputType &in, OutputType& out)
+  virtual void compute(const InputType &in, OutputType& out) const
   {
     double c = in(0);
     double f = in(1);
