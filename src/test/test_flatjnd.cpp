@@ -30,7 +30,7 @@ int main()
   jnd.set_mesh(&mesh);
   jnd.init();
 
-  jnd.set_local_lightsource(64);
+  jnd.set_local_lightsource(256);
 
   jnd.set_screen(screen);
   jnd.set_user(user);

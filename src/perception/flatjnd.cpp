@@ -86,8 +86,8 @@ compute_visibility(int id,
     double f = frequency(fp[i], cam, displacement);
 
     //threshold model is not that accurate for very low frequencies
-    double T1 = m_threshold(NWHWD16_Threshold::InputType(iC, std::max(1., iF)));
-    double T2 = m_threshold(NWHWD16_Threshold::InputType(iC, std::max(1., f )));
+    double T1 = m_threshold(NWHWD16_Threshold::InputType(iC, std::max(.3, iF)));
+    double T2 = m_threshold(NWHWD16_Threshold::InputType(iC, std::max(.3, f )));
 
     bool is_ambigous = c < 0.;
     c = fabs(c); //we need to positive value
