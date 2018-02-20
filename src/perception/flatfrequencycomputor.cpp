@@ -16,7 +16,9 @@ compute(const Eigen::Vector3d &p1,
   int    npx = wDistance_to_pixel(m_scene.hvport, m_scene.fov, cdist, length);
   double cpd = pixel_to_cpd(m_screen.hres, m_screen.vres, m_screen.diag, m_user.dist, npx);
 
-  return cpd;
+  double max_cpd = pixel_to_cpd(m_screen.hres, m_screen.vres, m_screen.diag, m_user.dist, 2);
+
+  return std::min(cpd, max_cpd); //frequency cannot be higher then maximum screen frequency
 }
 
 double

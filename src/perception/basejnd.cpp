@@ -49,8 +49,26 @@ set_local_lightsource(int nSamples)
   m_light.clear();
   m_light.reserve(m_mesh->vertices_size());
   for(Mesh::Vertex_iterator it=m_mesh->vertices_begin(); it!=m_mesh->vertices_end(); ++it){
+
+    double mean_angle = 0;
+    int k = 0;
+
+    Mesh::Halfedge h0 = m_mesh->halfedge(*it);
+    Mesh::Halfedge h  = h0;
+    do{
+      Mesh::Face f = m_mesh->face(h);
+      if(f.is_valid()){
+        mean_angle += acos(m_mesh->normal(*it).dot(m_mesh->normal(f)));
+        ++k;
+      }
+      h = m_mesh->next_halfedge(m_mesh->opposite_halfedge(h));
+    }while(h!= h0);
+
+    mean_angle = mean_angle/double(k);
+    mean_angle = 0.5*M_PI - mean_angle;
+
     MatrixX3d samples;
-    lsampler.sample_to_global(samples, nSamples, m_mesh->normal(*it), 0.4*M_PI, 0.45*M_PI);
+    lsampler.sample_to_global(samples, nSamples, m_mesh->normal(*it), 0.85*mean_angle, 0.95*mean_angle);
     m_light.push_back(samples);
   }
 
@@ -60,25 +78,27 @@ set_local_lightsource(int nSamples)
 
 double
 BaseJND::
-compute_displacement_threshold(int id, const LightType& ldir, const CamType& cam, const Vector3d& dir)
+compute_displacement_threshold(int id,
+                               const LightType& ldir,
+                               const CamType& cam,
+                               const Vector3d& dir)
 {
   //inveral boundaries
-  double a = 0;
-  double b = 0.1*m_mesh->bbox().diagonal().norm();
+  double a = 0.;
+  double b = 1.e8*m_interval_width;//0.001*m_mesh->bbox().diagonal().norm();
 
   //initialize threshold to upper boundary
   double T = b;
 
   //initialize visibility
   double v = compute_visibility(id, ldir, cam, T*dir);
+
   while( fabs(v-m_tolerence) > m_precision ){
     //get interval middle
     T = a + 0.5*(b-a);
 
     //update visibility
     v = compute_visibility(id, ldir, cam, T*dir);
-
-//    std::cout << T << ", " << v << std::endl;
 
     //update interval
     if(v > m_tolerence)
@@ -101,8 +121,15 @@ compute_displacement_threshold(int id, const CamType& cam, const Vector3d& dir)
   VectorXd T;
   T.resize(m_light[id].rows()); T.setOnes();
 
-  for(unsigned int i=0; i<m_light[id].rows(); ++i)
-    T(i) = compute_displacement_threshold(id, m_light[id].row(i), cam, dir);
+  for(unsigned int i=0; i<m_light[id].rows(); ++i){
+    if(m_light[id].row(i).dot(m_mesh->normal(Mesh::Vertex(i))) > 0.)
+      //no need to take into considertation light comming from the back
+      T(i) = compute_displacement_threshold(id, m_light[id].row(i), cam, dir);
+
+//    std::cout << T(i) << ", " << std::flush;
+  }
+
+//  std::cout << std::endl;
 
   return T.minCoeff();
 }
@@ -135,7 +162,7 @@ compute_displacement_threshold(const CamType& cam, const std::vector<Vector3d> &
 
     if(m_verbose_level > 1){
       int percent = int(100. * double(i)/double(m_mesh->vertices_size()));
-      if(percent - previous_percent > 10){
+      if(percent - previous_percent > 9){
         std::cout <<percent << "% ... " << std::flush;
         previous_percent = percent;
       }

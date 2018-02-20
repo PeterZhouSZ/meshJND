@@ -7,8 +7,10 @@ using namespace std;
 int main()
 {
   Mesh mesh;
-  mesh.read("../data/bimba.obj");
+  mesh.read("../data/plane.obj");
+  mesh.update_face_normals();
   mesh.update_vertex_normals();
+  mesh.compute_bounding_box();
 
   std::vector<Vector3d> dir;
   dir.reserve(mesh.vertices_size());
@@ -22,13 +24,13 @@ int main()
   SarkisonCSF csf(SarkisonCSF::ParameterType(-13.59, 0.01, 0.62));
   DalyMasking masking(DalyMasking::ParameterType(0.006, 90.66, 1.05, 4.53));
 
-  CamType cam(0., 0., 1.);
+  CamType cam = mesh.bbox().center() + Eigen::Vector3d(0., 0., 1.)*mesh.bbox().diagonal().norm();
 
   FlatJND jnd;
   jnd.set_mesh(&mesh);
   jnd.init();
 
-  jnd.set_local_lightsource(64);
+  jnd.set_local_lightsource(16);
 
   jnd.set_screen(screen);
   jnd.set_user(user);
@@ -37,12 +39,12 @@ int main()
   jnd.set_CSF(csf);
   jnd.set_Masking(masking);
 
-  jnd.set_algorithm_parameters(0.90, 0.05, 1.e-1);
+  jnd.set_algorithm_parameters(0.80, 0.1, 1.e-8);
 
   VectorXd threshold;
   jnd.compute_displacement_threshold(cam, dir, threshold);
 
-  mesh.store_as_vertex_color(threshold, threshold.maxCoeff());
+  mesh.store_as_vertex_color(threshold, 1.e-2);
   mesh.write("flatjnd.off");
 
   std::cout << "max threshold : " << threshold.maxCoeff() << std::endl;

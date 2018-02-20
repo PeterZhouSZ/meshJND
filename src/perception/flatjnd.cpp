@@ -66,14 +66,18 @@ init()
 
 double
 FlatJND::
-compute_visibility(int id, const LightType &ldir, const CamType &cam, const Vector3d &displacement) const
+compute_visibility(int id,
+                   const LightType &ldir,
+                   const CamType &cam,
+                   const Vector3d &displacement) const
 {
   double v = 0.;
 
   const FacePairs& fp = m_fp[id];
   for(unsigned int i=0; i<fp.size(); ++i){
-    double iF = m_fc.compute(ldir, cam, m_mesh->edge(Mesh::Halfedge(fp[i].id)).idx());   //initial frequency
-    double iC = m_cc.compute(ldir, m_mesh->edge(Mesh::Halfedge(fp[i].id)).idx())     ;   //initial contrast
+
+    double iF = m_fc.compute(ldir, cam, m_mesh->edge(Mesh::Halfedge(fp[i].id)).idx()); //initial frequency
+    double iC = m_cc.compute(ldir, m_mesh->edge(Mesh::Halfedge(fp[i].id)).idx())     ; //initial contrast
 
     //uses eq 9 to compute new normal and then evaluates contrast
     //return negative value if ambigous case (eq 12)
@@ -81,24 +85,22 @@ compute_visibility(int id, const LightType &ldir, const CamType &cam, const Vect
     //uses eq 10 to compute new distance and then evaluates frequency
     double f = frequency(fp[i], cam, displacement);
 
-    double T1 = m_threshold(NWHWD16_Threshold::InputType(iC, iF));
-    double T2 = m_threshold(NWHWD16_Threshold::InputType(iC, f ));
+    //threshold model is not that accurate for very low frequencies
+    double T1 = m_threshold(NWHWD16_Threshold::InputType(iC, std::max(1., iF)));
+    double T2 = m_threshold(NWHWD16_Threshold::InputType(iC, std::max(1., f )));
 
     bool is_ambigous = c < 0.;
     c = fabs(c); //we need to positive value
 
     double dc = is_ambigous ? c+iC : fabs(c-iC);
 
-    double v_fp = iC;//std::max( m_visibility(VisibilityModel::InputType(dc, T1)),
-                     //       m_visibility(VisibilityModel::InputType(dc, T2)) );
-
-//    std::cout << iC << ", " << iF << ", " << T1 << std::endl;
+    double v_fp = std::max( m_visibility(VisibilityModel::InputType(dc, T1)),
+                            m_visibility(VisibilityModel::InputType(dc, T2)) );
 
     v = std::max(v, v_fp);
 
-//    if(v == 1.) //no need to continue
-//      break;
-//    break;
+    if(v == 1.) //no need to continue
+      break;
   }
 
   return v;
@@ -141,7 +143,7 @@ contrast(const FacePair& fp, const LightType& l, const Vector3d& d) const
     Vector3d v4 = m_mesh->position(m_mesh->to_vertex(m_mesh->next_halfedge(m_mesh->opposite_halfedge(h))));
 
     n1 = (v2-(v1+d)).cross(v3-(v1+d)).normalized();
-    n2 = (v2-(v1+d)).cross(v4-(v1+d)).normalized();
+    n2 = (v4-(v1+d)).cross(v2-(v1+d)).normalized();
 
     Vector3d t = (v4 - 0.5*(v1+v2)).normalized();
     sign = m_mesh->normal(m_mesh->face(h)).dot(t) * n1.dot(t) < 0. ? -1. : 1.;
@@ -166,12 +168,12 @@ contrast(const FacePair& fp, const LightType& l, const Vector3d& d) const
      * only n1 is changing
     */
 
-    Vector3d v1 = m_mesh->position(m_mesh->to_vertex(m_mesh->next_halfedge(h))); // the vertex that is moving
+    Vector3d v1 = m_mesh->position(m_mesh->to_vertex(m_mesh->next_halfedge(h))); // the vertex that is moving    
     Vector3d v2 = m_mesh->position(m_mesh->from_vertex(h));
     Vector3d v3 = m_mesh->position(m_mesh->to_vertex(h));
     Vector3d v4 = m_mesh->position(m_mesh->to_vertex((m_mesh->next_halfedge(m_mesh->opposite_halfedge(h)))));
 
-    n1 = ((v1+d)-v2).cross(v3-v2).normalized();
+    n1 = (v3-v2).cross((v1+d)-v2).normalized();
     n2 = m_mesh->normal(m_mesh->face(m_mesh->opposite_halfedge(h)));
 
     Vector3d t = (v4 - 0.5*(v2+v3)).normalized();
