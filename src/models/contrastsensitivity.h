@@ -46,7 +46,7 @@ protected:
   /// "Just noticeable distortion profile for flat-shaded 3D mesh surfaces." IEEE transactions on visualization and computer graphics 22.11 (2016).
   virtual void default_params()
   {
-    m_param = ParameterType(-13.59, 0.01, 0.62);
+    m_param = ParameterType(-15.13, 0.0096, 0.64);
   }
 };
 

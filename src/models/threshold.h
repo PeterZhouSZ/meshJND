@@ -60,8 +60,8 @@ protected:
   /// "Just noticeable distortion profile for flat-shaded 3D mesh surfaces." IEEE transactions on visualization and computer graphics 22.11 (2016).
   virtual void default_params()
   {
-    m_param.csf     = SarkisonCSF( SarkisonCSF::ParameterType(-13.59, 0.01, 0.62) );
-    m_param.masking = DalyMasking( DalyMasking::ParameterType(0.006, 90.66, 1.05, 4.53) );
+    m_param.csf     = SarkisonCSF( SarkisonCSF::ParameterType(-15.13, 0.0096, 0.64) );
+    m_param.masking = DalyMasking( DalyMasking::ParameterType(0.0078, 88.29, 1.0, 4.207) );
   }
 
 };

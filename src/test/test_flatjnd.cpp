@@ -7,7 +7,7 @@ using namespace std;
 int main()
 {
   Mesh mesh;
-  mesh.read("../data/plane.obj");
+  mesh.read("../data/mask.obj");
   mesh.update_face_normals();
   mesh.update_vertex_normals();
   mesh.compute_bounding_box();
@@ -21,8 +21,8 @@ int main()
   UserParam   user(50.);
   SceneParam  scene(1080, M_PI*0.3333);
 
-  SarkisonCSF csf(SarkisonCSF::ParameterType(-13.59, 0.01, 0.62));
-  DalyMasking masking(DalyMasking::ParameterType(0.006, 90.66, 1.05, 4.53));
+  SarkisonCSF csf(SarkisonCSF::ParameterType(-15.13, 0.0096, 0.64));
+  DalyMasking masking(DalyMasking::ParameterType(0.0078, 88.29, 1.0, 4.207));
 
   CamType cam = mesh.bbox().center() + Eigen::Vector3d(0., 0., 1.)*mesh.bbox().diagonal().norm();
 
@@ -30,7 +30,7 @@ int main()
   jnd.set_mesh(&mesh);
   jnd.init();
 
-  jnd.set_local_lightsource(16);
+  jnd.set_local_lightsource(64);
 
   jnd.set_screen(screen);
   jnd.set_user(user);
@@ -44,7 +44,8 @@ int main()
   VectorXd threshold;
   jnd.compute_displacement_threshold(cam, dir, threshold);
 
-  mesh.store_as_vertex_color(threshold, 1.e-2);
+  mesh.store_as_vertex_color(threshold,
+                             threshold.maxCoeff());
   mesh.write("flatjnd.off");
 
   std::cout << "max threshold : " << threshold.maxCoeff() << std::endl;

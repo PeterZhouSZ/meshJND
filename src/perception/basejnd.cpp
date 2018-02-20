@@ -68,7 +68,7 @@ set_local_lightsource(int nSamples)
     mean_angle = 0.5*M_PI - mean_angle;
 
     MatrixX3d samples;
-    lsampler.sample_to_global(samples, nSamples, m_mesh->normal(*it), 0.85*mean_angle, 0.95*mean_angle);
+    lsampler.sample_to_global(samples, nSamples, m_mesh->normal(*it), 0.80*mean_angle, 0.85*mean_angle);
     m_light.push_back(samples);
   }
 
@@ -85,7 +85,7 @@ compute_displacement_threshold(int id,
 {
   //inveral boundaries
   double a = 0.;
-  double b = 1.e8*m_interval_width;//0.001*m_mesh->bbox().diagonal().norm();
+  double b = 0.1*m_mesh->bbox().diagonal().norm();
 
   //initialize threshold to upper boundary
   double T = b;
@@ -157,6 +157,12 @@ compute_displacement_threshold(const CamType& cam, const std::vector<Vector3d> &
   out.resize(m_mesh->vertices_size());
   out.setZero();
 
+#if _USE_OPENMP_
+  unsigned int i = 0;
+#pragma omp parallel for
+  for(i=0; i<m_mesh->vertices_size(); ++i)
+    out(i) = compute_displacement_threshold(i, cam, dir[i]);
+#else
   int previous_percent = 0.;
   for(unsigned int i=0; i<m_mesh->vertices_size(); ++i){
 
@@ -170,6 +176,7 @@ compute_displacement_threshold(const CamType& cam, const std::vector<Vector3d> &
 
     out(i) = compute_displacement_threshold(i, cam, dir[i]);
   }
+#endif
 
   if(m_verbose_level > 1)
     std::cout << "done." << std::endl;
