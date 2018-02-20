@@ -1,7 +1,8 @@
 meshJND
 =======
 ### Updates
- * flatJND is not yet functional, should be soon !!
+ * [20-02-2018] : flatJND is now functional :), more to come in next few weeks !!
+ * [18-02-2018] : flatJND is not yet functional, should be soon !!
 
 ### About
 An implementation of an algorithm that computes the **J**ust **N**oticeable **D**istortion for 3D meshes.
