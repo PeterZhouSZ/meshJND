@@ -125,11 +125,7 @@ compute_displacement_threshold(int id, const CamType& cam, const Vector3d& dir)
     if(m_light[id].row(i).dot(m_mesh->normal(Mesh::Vertex(i))) > 0.)
       //no need to take into considertation light comming from the back
       T(i) = compute_displacement_threshold(id, m_light[id].row(i), cam, dir);
-
-//    std::cout << T(i) << ", " << std::flush;
   }
-
-//  std::cout << std::endl;
 
   return T.minCoeff();
 }

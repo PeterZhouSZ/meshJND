@@ -7,7 +7,7 @@ using namespace std;
 int main()
 {
   Mesh mesh;
-  mesh.read("../data/mask.obj");
+  mesh.read("../data/buste.off");
   mesh.update_face_normals();
   mesh.update_vertex_normals();
   mesh.compute_bounding_box();
@@ -31,6 +31,7 @@ int main()
   jnd.init();
 
   jnd.set_local_lightsource(256);
+//  jnd.set_global_lightsource(Eigen::Vector3d(0., 0., 1.));
 
   jnd.set_screen(screen);
   jnd.set_user(user);
