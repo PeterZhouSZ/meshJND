@@ -86,6 +86,7 @@ SET(MESHJND_SRC_FILES
 
     src/utils/colormap.cpp
     src/utils/lightsampler.cpp
+    src/utils/math_utils.cpp
     )
 
 SET(MESHJND_HEADER_FILES
@@ -108,6 +109,7 @@ SET(MESHJND_HEADER_FILES
     src/utils/colormap.h
     src/utils/genericparametricmodel.h
     src/utils/lightsampler.h
+    src/utils/math_utils.h
     src/utils/unitconverter.h
     )
 
