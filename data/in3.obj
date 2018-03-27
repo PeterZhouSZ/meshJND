@@ -1,0 +1,46 @@
+# Produced with JavaView v.4.60
+# JavaView is © 1997-2015, www.javaview.de
+# by Konrad Polthier, Ulrich Reitebuch, Konstantin Poelke, Faniry Razafindrazaka
+#     File Format = Wavefront OBJ
+#     Geometry    = Cube
+#     Date        = Tue Mar 13 14:00:42 CET 2018
+#
+#     Number of Vertices = 8
+#     Number of Elements = 12
+#     Additional: Vertex Normals
+#
+# End of Header
+# Vertex List
+# Number of Vertexs = 8
+v -0.57735 -0.57735 -0.57735
+v 0.57735 -0.57735 -0.57735
+v 0.57735 0.57735 -0.57735
+v -0.57735 0.57735 -0.57735
+v -0.57735 -0.57735 0.57735
+v 0.57735 -0.57735 0.57735
+v 0.57735 0.57735 0.57735
+v -0.57735 0.57735 0.57735
+# Vertex Normal List
+# Number of Vertex Normals = 8
+vn -0.8164966 -0.4082483 -0.4082483
+vn 0.33333334 -0.6666667 -0.6666667
+vn 0.8164966 0.4082483 -0.4082483
+vn -0.33333334 0.6666667 -0.6666667
+vn -0.4082483 -0.8164966 0.4082483
+vn 0.6666667 -0.33333334 0.6666667
+vn 0.4082483 0.8164966 0.4082483
+vn -0.6666667 0.33333334 0.6666667
+# Face List
+# Number of Faces = 12
+f  2//2 1//1 4//4
+f  4//4 3//3 2//2
+f  5//5 1//1 2//2
+f  2//2 6//6 5//5
+f  6//6 2//2 3//3
+f  3//3 7//7 6//6
+f  7//7 3//3 4//4
+f  4//4 8//8 7//7
+f  8//8 4//4 1//1
+f  1//1 5//5 8//8
+f  8//8 5//5 6//6
+f  6//6 7//7 8//8

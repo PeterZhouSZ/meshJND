@@ -72,6 +72,7 @@ compute_visibility(int id,
                    const Vector3d &displacement) const
 {
   double v = 0.;
+  // double v = 1000000000.;
 
   const FacePairs& fp = m_fp[id];
   for(unsigned int i=0; i<fp.size(); ++i){
@@ -89,7 +90,7 @@ compute_visibility(int id,
     double T1 = m_threshold(NWHWD16_Threshold::InputType(iC, std::max(.3, iF)));
     double T2 = m_threshold(NWHWD16_Threshold::InputType(iC, std::max(.3, f )));
 
-    bool is_ambigous = c < 0.;
+    bool is_ambigous = c < 0. ? true : false;
     c = fabs(c); //we need to positive value
 
     double dc = is_ambigous ? c+iC : fabs(c-iC);
@@ -98,12 +99,13 @@ compute_visibility(int id,
                             m_visibility(VisibilityModel::InputType(dc, T2)) );
 
     v = std::max(v, v_fp);
+    // v = std::max(dc, v);
 
     if(v == 1.) //no need to continue
       break;
   }
 
-  return v;
+  return v;//m_threshold(NWHWD16_Threshold::InputType(v, f));
 }
 
 double
@@ -168,7 +170,7 @@ contrast(const FacePair& fp, const LightType& l, const Vector3d& d) const
      * only n1 is changing
     */
 
-    Vector3d v1 = m_mesh->position(m_mesh->to_vertex(m_mesh->next_halfedge(h))); // the vertex that is moving    
+    Vector3d v1 = m_mesh->position(m_mesh->to_vertex(m_mesh->next_halfedge(h))); // the vertex that is moving
     Vector3d v2 = m_mesh->position(m_mesh->from_vertex(h));
     Vector3d v3 = m_mesh->position(m_mesh->to_vertex(h));
     Vector3d v4 = m_mesh->position(m_mesh->to_vertex((m_mesh->next_halfedge(m_mesh->opposite_halfedge(h)))));
@@ -180,7 +182,7 @@ contrast(const FacePair& fp, const LightType& l, const Vector3d& d) const
     sign = m_mesh->normal(m_mesh->face(h)).dot(t) * n1.dot(t) < 0. ? -1. : 1.;
   }
 
-  return m_cc.compute(n1, n2, l);
+  return sign*m_cc.compute(n1, n2, l);
 }
 
 double
@@ -238,4 +240,3 @@ frequency(const FacePair& fp, const CamType& c, const Vector3d& d) const
 
   return m_fc.compute(a, b, c);
 }
-

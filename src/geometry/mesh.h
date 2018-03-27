@@ -15,6 +15,8 @@ public:
   virtual ~Mesh();
 
 public:
+  double dehedral_angle(Halfedge h);
+
   const Eigen::AlignedBox3d& bbox() const { return m_bbox; }
   Eigen::AlignedBox3d& bbox() { return m_bbox; }
 

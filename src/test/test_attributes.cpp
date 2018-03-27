@@ -22,7 +22,7 @@ int main()
 
   std::cout << "loading mesh .... " << std::flush;
 
-  mesh.read("../data/OldMan.obj");
+  mesh.read("../data/bimba_high.off");
   mesh.update_face_normals();
 
   std::cout << "done." << std::endl;
@@ -84,7 +84,9 @@ int main()
 
   }
 
-  mesh.store_as_vertex_color(vcontrast, vcontrast.maxCoeff()*0.001);
+  vcontrast /= vcontrast.maxCoeff();
+  vcontrast = vcontrast.array().pow(0.15);
+  mesh.store_as_vertex_color(vcontrast, 1., 0.);
   mesh.write("contrast.off");
 
   mesh.store_as_vertex_color(vfrequency, 15., 0.);

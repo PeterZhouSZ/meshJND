@@ -1,5 +1,6 @@
 #include "mesh.h"
 
+#include <cmath>
 #include "colormap.h"
 
 Mesh::
@@ -11,6 +12,18 @@ Mesh()
 Mesh::
 ~Mesh()
 {
+}
+
+double
+Mesh::dehedral_angle(Halfedge h) {
+  Face f1 = face(h);
+  Face f2 = face(opposite_halfedge(h));
+
+  if(f1.is_valid() && f2.is_valid()){
+    return acos(fabs(compute_face_normal(f1).dot(compute_face_normal(f2))));
+  }
+
+  return 0.;
 }
 
 void

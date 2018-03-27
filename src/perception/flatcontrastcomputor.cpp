@@ -9,7 +9,7 @@ compute(const Eigen::Vector3d &n1,
         const Eigen::Vector3d &ldir) const
 {
   double cos_phi   = fabs(n1.dot(n2));
-  double gcontrast = sqrt(fabs(1. - cos_phi)/(1. + cos_phi));
+  double gcontrast = sqrt((1. - cos_phi)/(1. + cos_phi));
 
   Eigen::Vector3d ns = n1 + n2;
   Eigen::Vector3d nd = n1 - n2;

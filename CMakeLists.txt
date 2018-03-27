@@ -78,6 +78,7 @@ SET(SURFACE_MESH_HEADER_FILES
 
 SET(MESHJND_SRC_FILES
     src/geometry/mesh.cpp
+    src/geometry/mesh_utils.cpp
 
     src/perception/flatcontrastcomputor.cpp
     src/perception/flatfrequencycomputor.cpp
@@ -91,6 +92,7 @@ SET(MESHJND_SRC_FILES
 
 SET(MESHJND_HEADER_FILES
     src/geometry/mesh.h
+    src/geometry/mesh_utils.h
 
     src/models/contrastsensitivity.h
     src/models/contrastmasking.h

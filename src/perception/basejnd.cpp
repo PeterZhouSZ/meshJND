@@ -50,7 +50,7 @@ set_local_lightsource(int nSamples)
   m_light.reserve(m_mesh->vertices_size());
   for(Mesh::Vertex_iterator it=m_mesh->vertices_begin(); it!=m_mesh->vertices_end(); ++it){
 
-    double mean_angle = 0;
+    double angle = 0.;
     int k = 0;
 
     Mesh::Halfedge h0 = m_mesh->halfedge(*it);
@@ -58,17 +58,17 @@ set_local_lightsource(int nSamples)
     do{
       Mesh::Face f = m_mesh->face(h);
       if(f.is_valid()){
-        mean_angle += acos(m_mesh->normal(*it).dot(m_mesh->normal(f)));
+        angle += m_mesh->dehedral_angle(m_mesh->next_halfedge(h));
         ++k;
       }
       h = m_mesh->next_halfedge(m_mesh->opposite_halfedge(h));
     }while(h!= h0);
 
-    mean_angle = mean_angle/double(k);
-    mean_angle = 0.5*M_PI - mean_angle;
+    angle = angle/double(k);
+    angle = (M_PI_2 - angle);
 
     MatrixX3d samples;
-    lsampler.sample_to_global(samples, nSamples, m_mesh->normal(*it), 0.80*mean_angle, 0.85*mean_angle);
+    lsampler.sample_to_global(samples, nSamples, m_mesh->normal(*it), 0.95*angle, 0.95*angle);
     m_light.push_back(samples);
   }
 
@@ -120,12 +120,13 @@ compute_displacement_threshold(int id, const CamType& cam, const Vector3d& dir)
 {
   VectorXd T;
   T.resize(m_light[id].rows()); T.setOnes();
+  T = T*0.1*m_mesh->bbox().diagonal().norm();
 
-  for(unsigned int i=0; i<m_light[id].rows(); ++i){
-    if(m_light[id].row(i).dot(m_mesh->normal(Mesh::Vertex(i))) > 0.)
+  // for(unsigned int i=0; i<m_light[id].rows(); ++i){
+    // if(m_light[id].row(i).dot(m_mesh->normal(Mesh::Vertex(i))) > 0.)
       //no need to take into considertation light comming from the back
-      T(i) = compute_displacement_threshold(id, m_light[id].row(i), cam, dir);
-  }
+      // T(i) = compute_displacement_threshold(id, m_light[id].row(i), cam, dir);
+  // }
 
   return T.minCoeff();
 }

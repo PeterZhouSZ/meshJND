@@ -2,12 +2,13 @@
 using namespace std;
 
 #include "mesh.h"
+#include "mesh_utils.h"
 #include "flatjnd.h"
 
 int main()
 {
   Mesh mesh;
-  mesh.read("../data/buste.off");
+  mesh.read("../data/bimba_high.off");
   mesh.update_face_normals();
   mesh.update_vertex_normals();
   mesh.compute_bounding_box();
@@ -30,8 +31,8 @@ int main()
   jnd.set_mesh(&mesh);
   jnd.init();
 
-  jnd.set_local_lightsource(256);
-//  jnd.set_global_lightsource(Eigen::Vector3d(0., 0., 1.));
+  // jnd.set_local_lightsource(32);
+  jnd.set_global_lightsource(Eigen::Vector3d(0., 0., 1.));
 
   jnd.set_screen(screen);
   jnd.set_user(user);
@@ -40,17 +41,31 @@ int main()
   jnd.set_CSF(csf);
   jnd.set_Masking(masking);
 
-  jnd.set_algorithm_parameters(0.80, 0.1, 1.e-8);
+  jnd.set_algorithm_parameters(0.67, 0.05, 1.e-8);
 
   VectorXd threshold;
   jnd.compute_displacement_threshold(cam, dir, threshold);
 
-  mesh.store_as_vertex_color(threshold,
-                             threshold.maxCoeff());
+  VectorXd value = threshold;
+  value /= value.maxCoeff();
+  value = value.array().pow(.5);
+  mesh.store_as_vertex_color(value, 1.);
   mesh.write("flatjnd.off");
 
   std::cout << "max threshold : " << threshold.maxCoeff() << std::endl;
   std::cout << "min threshold : " << threshold.minCoeff() << std::endl;
 
+  std::cout << "adding noise" << std::endl;
+
+  // Mesh noise;
+  // noise = mesh;
+  // add_jnd_noise(&mesh, dir, cam, jnd, noise, 1.);
+  // noise.write("noisy.off");
+  // noise = mesh;
+  // add_jnd_noise(&mesh, dir, cam, jnd, noise, 1.2);
+  // noise.write("noisy_vis.off");
+  // noise = mesh;
+  // add_jnd_noise(&mesh, dir, cam, jnd, noise, 0.8);
+  // noise.write("noisy_non.off");
   return 0;
 }
