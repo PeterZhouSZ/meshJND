@@ -109,16 +109,16 @@ compute_visibility(int vid,
     double f = frequency(fp, cam, displacement);
 
     //threshold model is not that accurate for very low frequencies
-    double T1 = m_threshold(NWHWD16_Threshold::InputType(iC, std::max(.3, iF)));
-    double T2 = m_threshold(NWHWD16_Threshold::InputType(iC, std::max(.3, f )));
+    double T1 = m_threshold(NWHWD16_Threshold::InputType(iC, std::max(1.0, iF)));
+    double T2 = m_threshold(NWHWD16_Threshold::InputType(iC, std::max(1.0, f )));
 
     bool is_ambigous = c < 0. ? true : false;
     c = fabs(c); //we need to positive value
 
     double dc = is_ambigous ? c+iC : fabs(c-iC);
 
-    double v = std::max( m_visibility(VisibilityModel::InputType(dc, T1)), 0.);
-                         // m_visibility(VisibilityModel::InputType(dc, T2)) );
+    double v = std::max( m_visibility(VisibilityModel::InputType(dc, T1)),
+                         m_visibility(VisibilityModel::InputType(dc, T2)) );
 
     // v = std::max(v, v_fp);
 
@@ -169,7 +169,7 @@ contrast(const FacePair& fp, const LightType& l, const Vector3d& d) const
     n2 = (v4-(v1+d)).cross(v2-(v1+d)).normalized();
 
     Vector3d t = (v4 - 0.5*(v1+v2)).normalized();
-    sign = m_mesh->normal(m_mesh->face(h)).dot(t) * n1.dot(t) < 0. ? -1. : 1.;
+    // sign = m_mesh->normal(m_mesh->face(h)).dot(t) * n1.dot(t) < 0. ? -1. : 1.;
   }
   else{
 
@@ -200,7 +200,7 @@ contrast(const FacePair& fp, const LightType& l, const Vector3d& d) const
     n2 = m_mesh->normal(m_mesh->face(m_mesh->opposite_halfedge(h)));
 
     Vector3d t = (v4 - 0.5*(v2+v3)).normalized();
-    sign = m_mesh->normal(m_mesh->face(h)).dot(t) * n1.dot(t) < 0. ? -1. : 1.;
+    // sign = m_mesh->normal(m_mesh->face(h)).dot(t) * n1.dot(t) < 0. ? -1. : 1.;
   }
 
   return sign*m_cc.compute(n1, n2, l);

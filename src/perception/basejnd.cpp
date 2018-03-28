@@ -66,9 +66,7 @@ set_local_lightsource(int nSamples)
     }while(h!= h0);
 
     angle = angle/double(k);
-    angle = (M_PI_2 - angle - 0.174532925);
-
-    std::cout << angle << std::endl;
+    angle = (M_PI_2 - angle - 0.5*0.174532925);
 
     MatrixX3d samples;
     lsampler.sample_to_global(samples, nSamples, m_mesh->normal(*it), angle, angle);
