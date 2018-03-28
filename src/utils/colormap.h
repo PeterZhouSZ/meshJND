@@ -7,7 +7,7 @@ using namespace Eigen;
 class ColorMap
 {
 public:
-  enum Type { GREY, SEASHORE, BLACKBODY };
+  enum Type { GREY, SEASHORE, BLACKBODY, COLD_WARM };
 
 public:
   ColorMap(Type t = GREY)
@@ -32,4 +32,3 @@ protected:
 };
 
 #endif // COLORMAP_H
-

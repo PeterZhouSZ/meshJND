@@ -47,7 +47,7 @@ store_as_vertex_color(const Eigen::VectorXd &data, double max, double min)
     return;
 
   //compute colors
-  ColorMap colorMap(ColorMap::BLACKBODY);
+  ColorMap colorMap(ColorMap::COLD_WARM);
   Eigen::MatrixXd colors;
   colorMap.compute_colors(data, colors, min, max);
 

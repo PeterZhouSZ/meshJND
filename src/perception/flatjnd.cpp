@@ -2,6 +2,28 @@
 
 #include "mesh.h"
 
+int
+FlatJND::
+number_of_affected_elements(int vid)
+{
+  return m_fp[vid].size();
+}
+
+bool
+FlatJND::
+is_visible(int vid, int eid, const LightType& ldir)
+{
+  const FacePair& fp = m_fp[vid][eid];
+
+  Vector3d n1 = m_mesh->normal(m_mesh->face(Mesh::Halfedge(fp.id)));
+  Vector3d n2 = m_mesh->normal(m_mesh->face(m_mesh->opposite_halfedge(Mesh::Halfedge(fp.id))));
+
+  if((n1+n2).dot(ldir) > 0.)
+    return true;
+
+  return false;
+}
+
 void
 FlatJND::
 init()
@@ -66,25 +88,25 @@ init()
 
 double
 FlatJND::
-compute_visibility(int id,
+compute_visibility(int vid,
+                   int eid,
                    const LightType &ldir,
                    const CamType &cam,
                    const Vector3d &displacement) const
 {
-  double v = 0.;
-  // double v = 1000000000.;
+  // double v = 0.;
 
-  const FacePairs& fp = m_fp[id];
-  for(unsigned int i=0; i<fp.size(); ++i){
+  const FacePair& fp = m_fp[vid][eid];
+  // for(unsigned int i=0; i<fp.size(); ++i){
 
-    double iF = m_fc.compute(ldir, cam, m_mesh->edge(Mesh::Halfedge(fp[i].id)).idx()); //initial frequency
-    double iC = m_cc.compute(ldir, m_mesh->edge(Mesh::Halfedge(fp[i].id)).idx())     ; //initial contrast
+    double iF = m_fc.compute(ldir, cam, m_mesh->edge(Mesh::Halfedge(fp.id)).idx()); //initial frequency
+    double iC = m_cc.compute(ldir, m_mesh->edge(Mesh::Halfedge(fp.id)).idx())     ; //initial contrast
 
     //uses eq 9 to compute new normal and then evaluates contrast
     //return negative value if ambigous case (eq 12)
-    double c = contrast(fp[i], ldir, displacement);
+    double c = contrast(fp, ldir, displacement);
     //uses eq 10 to compute new distance and then evaluates frequency
-    double f = frequency(fp[i], cam, displacement);
+    double f = frequency(fp, cam, displacement);
 
     //threshold model is not that accurate for very low frequencies
     double T1 = m_threshold(NWHWD16_Threshold::InputType(iC, std::max(.3, iF)));
@@ -95,17 +117,16 @@ compute_visibility(int id,
 
     double dc = is_ambigous ? c+iC : fabs(c-iC);
 
-    double v_fp = std::max( m_visibility(VisibilityModel::InputType(dc, T1)),
-                            m_visibility(VisibilityModel::InputType(dc, T2)) );
+    double v = std::max( m_visibility(VisibilityModel::InputType(dc, T1)), 0.);
+                         // m_visibility(VisibilityModel::InputType(dc, T2)) );
 
-    v = std::max(v, v_fp);
-    // v = std::max(dc, v);
+    // v = std::max(v, v_fp);
 
-    if(v == 1.) //no need to continue
-      break;
-  }
+    // if(v == 1.) //no need to continue
+      // break;
+  // }
 
-  return v;//m_threshold(NWHWD16_Threshold::InputType(v, f));
+  return v;
 }
 
 double

@@ -50,6 +50,7 @@ set_local_lightsource(int nSamples)
   m_light.reserve(m_mesh->vertices_size());
   for(Mesh::Vertex_iterator it=m_mesh->vertices_begin(); it!=m_mesh->vertices_end(); ++it){
 
+    // double angle = 0.;
     double angle = 0.;
     int k = 0;
 
@@ -58,17 +59,19 @@ set_local_lightsource(int nSamples)
     do{
       Mesh::Face f = m_mesh->face(h);
       if(f.is_valid()){
-        angle += m_mesh->dehedral_angle(m_mesh->next_halfedge(h));
+        angle += acos(m_mesh->normal(f).dot(m_mesh->normal(*it)));
         ++k;
       }
       h = m_mesh->next_halfedge(m_mesh->opposite_halfedge(h));
     }while(h!= h0);
 
     angle = angle/double(k);
-    angle = (M_PI_2 - angle);
+    angle = (M_PI_2 - angle - 0.174532925);
+
+    std::cout << angle << std::endl;
 
     MatrixX3d samples;
-    lsampler.sample_to_global(samples, nSamples, m_mesh->normal(*it), 0.95*angle, 0.95*angle);
+    lsampler.sample_to_global(samples, nSamples, m_mesh->normal(*it), angle, angle);
     m_light.push_back(samples);
   }
 
@@ -78,27 +81,35 @@ set_local_lightsource(int nSamples)
 
 double
 BaseJND::
-compute_displacement_threshold(int id,
+max_displacement()
+{
+  return 0.1*m_mesh->bbox().diagonal().norm();
+}
+
+double
+BaseJND::
+compute_displacement_threshold(int vid,
+                               int eid,
                                const LightType& ldir,
                                const CamType& cam,
                                const Vector3d& dir)
 {
   //inveral boundaries
   double a = 0.;
-  double b = 0.1*m_mesh->bbox().diagonal().norm();
+  double b = max_displacement();
 
   //initialize threshold to upper boundary
   double T = b;
 
   //initialize visibility
-  double v = compute_visibility(id, ldir, cam, T*dir);
+  double v = compute_visibility(vid, eid, ldir, cam, T*dir);
 
   while( fabs(v-m_tolerence) > m_precision ){
     //get interval middle
     T = a + 0.5*(b-a);
 
     //update visibility
-    v = compute_visibility(id, ldir, cam, T*dir);
+    v = compute_visibility(vid, eid, ldir, cam, T*dir);
 
     //update interval
     if(v > m_tolerence)
@@ -116,19 +127,33 @@ compute_displacement_threshold(int id,
 
 double
 BaseJND::
-compute_displacement_threshold(int id, const CamType& cam, const Vector3d& dir)
+compute_displacement_threshold(int vid, const CamType& cam, const Vector3d& dir)
 {
-  VectorXd T;
-  T.resize(m_light[id].rows()); T.setOnes();
-  T = T*0.1*m_mesh->bbox().diagonal().norm();
+  int n_light    = m_light[vid].rows();
+  int n_elements = number_of_affected_elements(vid);
 
-  // for(unsigned int i=0; i<m_light[id].rows(); ++i){
-    // if(m_light[id].row(i).dot(m_mesh->normal(Mesh::Vertex(i))) > 0.)
+  int vector_size = n_light * n_elements;
+
+  VectorXd T = VectorXd::Ones(vector_size) * max_displacement();
+  bool is_valid = false;
+
+  Vector3d n = m_mesh->normal(Mesh::Vertex(vid));
+  for(int i=0; i<n_light; ++i){
+    const LightType& light = m_light[vid].row(i);
+    is_valid = light.dot(n) > 0.;
+    if(is_valid){
+      for(int j=0; j<n_elements; ++j){
+        bool visible = is_visible(vid, j, light);
+        if(visible)
+          T(i*n_elements + j) = compute_displacement_threshold(vid, j, light, cam, dir);
+      }
+    }
+
       //no need to take into considertation light comming from the back
-      // T(i) = compute_displacement_threshold(id, m_light[id].row(i), cam, dir);
-  // }
+        // T(i*n_elements + j) = compute_displacement_threshold(vid, j, light, cam, dir);
+  }
 
-  return T.minCoeff();
+  return is_valid ? T.minCoeff() : 0.;
 }
 
 void

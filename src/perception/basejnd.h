@@ -59,19 +59,28 @@ public:
     m_verbose_level = level;
   }
 
+  double max_displacement();
+
 public:
+  ///return the number of the number of affected elements when a vertex is displaced
+  virtual int number_of_affected_elements(int vid) = 0;
+
+  ///checks if an affected element is visible (is in the shade)
+  virtual bool is_visible(int vid, int eid, const LightType& ldir) = 0;
+
   ///performs precomputation needed to compute the displacement threshold
   virtual void init() = 0;
 
   ///computes the displacement threshold of a vertex in a given a light direction ldir and a noise direction dir
   /// implements alogorithm 1 of:
   /// "Just noticeable distortion profile for flat-shaded 3D mesh surfaces." IEEE transactions on visualization and computer graphics 22.11 (2016).
-  double compute_displacement_threshold(int id,
+  double compute_displacement_threshold(int vid,
+                                        int eid,
                                         const LightType& ldir,
                                         const CamType& cam,
                                         const Vector3d& dir);
 
-  double compute_displacement_threshold(int id,
+  double compute_displacement_threshold(int vid,
                                         const CamType& cam,
                                         const Vector3d& dir);
 
@@ -82,7 +91,8 @@ public:
 
 protected:
   ///computes the visibility of the a vertex when displaced by a certain vertor
-  virtual double compute_visibility(int id,
+  virtual double compute_visibility(int vid,
+                                    int eid,
                                     const LightType& ldir,
                                     const CamType& cam,
                                     const Vector3d& displacement) const = 0;

@@ -46,10 +46,15 @@ public:
 // virtual functions ------------------------------------------------------------
 
 public:
+  virtual int number_of_affected_elements(int vid);
+
+  virtual bool is_visible(int vid, int eid, const LightType& ldir);
+
   virtual void init();
 
 protected:
-  virtual double compute_visibility(int id,
+  virtual double compute_visibility(int vid,
+                                    int eid,
                                     const LightType &ldir,
                                     const CamType& cam,
                                     const Vector3d &displacement) const;
